@@ -1,0 +1,20 @@
+$LevelMargin: 16px;
+.root {
+  @for $i from 2 through 7 {
+    h#{$i} {
+      margin-left: ($i - 1) * $LevelMargin;
+    }
+  }
+  @for $i from 1 through 7 {
+    h#{$i} ~ p,
+    h#{$i} ~ pre {
+      margin-left: ($i) * $LevelMargin;
+    }
+  }
+  h1.title {
+    text-align: center;
+    border-bottom: #dddddd 1px solid;
+    padding-bottom: 16px;
+    margin-bottom: 32px;
+  }
+}

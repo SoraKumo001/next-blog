@@ -1,0 +1,22 @@
+.root {
+  display: inline-block;
+  position: relative;
+  cursor: pointer;
+  background: lightgrey;
+  border: lightsteelblue 1px solid;
+  border-radius: 100%;
+  padding: 16px;
+  opacity: 0.4;
+  overflow: visible;
+  &:hover {
+    opacity: unset;
+  }
+  .label {
+    margin-top: -8px;
+    font-size: 12px;
+    font-weight: bold;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+}

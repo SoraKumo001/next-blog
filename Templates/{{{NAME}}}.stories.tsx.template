@@ -1,0 +1,19 @@
+import React from 'react'
+import { {{{NAME}}} } from '.'
+import { Decorator } from '@/storybook'
+
+const StoryInfo = {
+  title: 'Components/{{{PATH}}}{{{NAME}}}',
+  decorators: [Decorator],
+  component: {{{NAME}}}
+}
+export default StoryInfo;
+
+export const Primary = (args: Parameters<typeof {{{NAME}}}>[0]) => (
+  <>
+    <{{{NAME}}} {...args}></{{{NAME}}}>
+  </>
+)
+Primary.args = {} as Parameters<typeof {{{NAME}}}>[0]
+
+Primary.parameters = {}

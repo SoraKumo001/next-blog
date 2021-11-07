@@ -1,0 +1,8 @@
+node_modules
+.next
+.storybook
+.vscode
+out
+.env
+.log
+storybook-static

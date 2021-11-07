@@ -1,0 +1,27 @@
+.root {
+  padding: 16px;
+  .content {
+    &:not(:first-child) {
+      margin-top: 16px;
+    }
+    cursor: pointer;
+    position: relative;
+    display: flex;
+    height: 128px;
+    border: #dddddd solid 1px;
+    border-radius: 16px;
+
+    .image {
+      display: flex;
+      align-items: center;
+      justify-items: center;
+      padding: 16px;
+      font-size: 64px;
+    }
+    .title {
+      margin: 16px 0;
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+}

@@ -207,9 +207,7 @@ export const useFireDoc = <
   }, []);
   const docQuery = useMemo(() => {
     if (!id) return undefined;
-    const c = collection(db, path);
-    const q = doc(c, id).withConverter(FirebaseConverter);
-    return q;
+    return doc(collection(db, path), id).withConverter(FirebaseConverter);
   }, [name, id]);
 
   useEffect(() => {

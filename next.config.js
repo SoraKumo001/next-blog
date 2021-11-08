@@ -2,9 +2,8 @@
  * @type { import("next").NextConfig}
  */
 const config = {
-  swcMinify: true,
+  //swcMinify: true,
   experimental: {
-    esmExternals: true,
     cpus: 4,
   },
   webpack: (config, { isServer }) => {

@@ -18,7 +18,7 @@ export interface Props {
   // srcContent: EndPoints['get']['contents'] | undefined;
   content: Content;
   contentBody: ContentBody;
-  onUpdate?: any;
+  onUpdate?: any
   onSave: () => void;
   onClose: () => void;
 }
@@ -44,7 +44,7 @@ export const EditWindow: FC<Props> = memo(({ content, contentBody, onUpdate, onC
       const t = text;
       if (refText.current !== t) {
         refText.current = t;
-        if (content) onUpdate({ ...content, body: t! });
+        //if (content) onUpdate(content,);
       }
     }, 500);
     return () => clearInterval(handle);
@@ -78,26 +78,27 @@ export const EditWindow: FC<Props> = memo(({ content, contentBody, onUpdate, onC
           </Button>
           <div className={styled.group}>
             <div className={styled.label}>Visible</div>
-            <Switch onChange={(e) => console.log(e.target.checked)} />
+            <Switch defaultChecked={content.visible} onChange={(e) => content.visible = e.currentTarget.checked} />
           </div>
           <TextField
             className={styled.input}
             size="small"
-            defaultValue={content?.title}
+            defaultValue={content.title}
+            onChange={(e) => { content.title = e.currentTarget.value }}
             label="Title"
           />
-          {
-            <DateTimePicker
-              inputFormat="yyyy/MM/dd HH:mm:ss"
-              renderInput={(props) => <TextField {...props} size="small" type="datetime-local" />}
-              label="Update"
-              value={content?.updatedAt}
-              onChange={(newValue) => {
-                if (content && newValue) content.updatedAt = newValue;
-              }}
-              readOnly={true}
-            />
-          }
+
+          <DateTimePicker
+            inputFormat="yyyy/MM/dd HH:mm:ss"
+            renderInput={(props) => <TextField {...props} size="small" type="datetime-local" />}
+            label="Update"
+            value={content?.updatedAt}
+            onChange={(newValue) => {
+              if (content && newValue) content.updatedAt = newValue;
+            }}
+            readOnly={true}
+          />
+
           <Button variant="outlined" onClick={handleReset}>
             リセット
           </Button>
@@ -105,7 +106,7 @@ export const EditWindow: FC<Props> = memo(({ content, contentBody, onUpdate, onC
         <MarkdownEditor
           className={styled.markdown}
           defaultValue={contentBody.body}
-          onUpdate={setText}
+          onUpdate={(text) => contentBody.body = text}
           event={event}
         />
       </div>

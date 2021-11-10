@@ -25,7 +25,6 @@ const getTreeText = (
 };
 
 interface Props {
-  onTitle: (title: string) => void;
 }
 
 /**
@@ -33,7 +32,7 @@ interface Props {
  *
  * @param {Props} { }
  */
-export const ContentMarkdown: FC<Props> = ({ children, onTitle }) => {
+export const ContentMarkdown: FC<Props> = ({ children }) => {
   const values = useRef<{ title?: string }>({}).current;
   const components: Parameters<typeof ReactMarkdown>[0]['components'] = {
     code({ node, inline, className, children, ...props }) {
@@ -56,25 +55,6 @@ export const ContentMarkdown: FC<Props> = ({ children, onTitle }) => {
       );
     },
   };
-  const test: Plugin = () => {
-    const plugin: Transformer = (tree: unist.Node & Partial<Parent>) => {
-      const h1 = tree.children?.find((v) => v.type === 'heading' && v.depth === 1);
-      if (h1) {
-        h1.data = { first: true };
-        h1.type = 'text';
-        (h1 as any).value = '';
-        const title = getTreeText(h1);
-        if (values.title === undefined) {
-          values.title = title;
-        } else if (title !== values.title) {
-          values.title = title;
-          onTitle?.(title);
-        }
-      }
-      return undefined;
-    };
-    return plugin;
-  };
   const handleImage = (src: string) => {
     const m = /https:\/\/drive\.google\.com\/file\/d\/(.*)\//.exec(src);
     return m ? `https://drive.google.com/uc?export=download&id=${m[1]}` : src;
@@ -84,8 +64,6 @@ export const ContentMarkdown: FC<Props> = ({ children, onTitle }) => {
       className={styled.root}
       components={components}
       transformImageUri={handleImage}
-      remarkPlugins={[test]}
-      //rehypePlugins={[rehypeRaw, test]}
     >
       {getNodeText(children)}
     </ReactMarkdown>

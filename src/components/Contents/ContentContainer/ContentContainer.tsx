@@ -7,7 +7,7 @@ import { EditWindow } from '../EditWindow';
 import IconEdit from '@mui/icons-material/EditOutlined';
 import { useNotification } from '@/hooks/useNotification';
 import { ContentMarkdown } from '../ContentMarkdown';
-import { firestore, newClass, useFireDoc } from '@/libs/firebase';
+import { firestore, newClass, saveDoc, useFireDoc } from '@/libs/firebase';
 import { Content, ContentBody } from '@/types/Content';
 
 interface Props {
@@ -20,11 +20,12 @@ interface Props {
  * @param {Props} { }
  */
 export const ContentContainer: FC<Props> = ({ id }) => {
-  const { state: stateContent, contents } = useFireDoc(firestore, Content, id);
+  const { state: stateContent, contents: srcContent } = useFireDoc(firestore, Content, id);
   const { state: stateBody, contents: srcBody } = useFireDoc(firestore, ContentBody, id);
   const [edit, setEdit] = useState(false);
   const handleSave = () => {
-    // content && dispatch(id, { body: content.body, title: content.title });
+    saveDoc(firestore, content!)
+    saveDoc(firestore, contentBody!)
   };
   // useEffect(() => {
   //   state === 'finished' && setContent(srcContent);
@@ -38,11 +39,18 @@ export const ContentContainer: FC<Props> = ({ id }) => {
   }, []);
   useLoading([stateContent, stateBody]);
   const contentBody = useMemo(() => {
+    if (stateBody !== "finished")
+      return undefined
     if (srcBody)
-      return srcBody
+      return newClass(ContentBody, srcBody)
     return newClass(ContentBody, { id })
-  }, [srcBody])
-  if (!contents)
+  }, [srcBody, stateBody])
+  const content = useMemo(() => {
+    if (stateContent !== "finished")
+      return undefined
+    return srcContent && newClass(Content, srcContent)
+  }, [srcContent, stateContent])
+  if (!content || !contentBody)
     return null
 
   return (
@@ -52,12 +60,12 @@ export const ContentContainer: FC<Props> = ({ id }) => {
           <IconEdit />
         </div>
         <div>
-          <h1>{contents?.title}</h1>
-          {contents && <ContentMarkdown onTitle={handleTitle}>{srcBody?.body}</ContentMarkdown>}
+          <h1>{content.title}</h1>
+          {contentBody && <ContentMarkdown>{contentBody?.body}</ContentMarkdown>}
         </div>
         {edit && (
           <EditWindow
-            content={contents}
+            content={content}
             contentBody={contentBody}
             onSave={handleSave}
             onClose={() => setEdit(false)}

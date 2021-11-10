@@ -177,7 +177,7 @@ export const FirebaseConverter: FirestoreDataConverter<Object> = {
     if (!entity) {
       return snapshot.data(options);
     }
-    const data = snapshot.data(options)!;
+    const data = snapshot.data(options)! || {};
     const values: { [key: string]: unknown } = {};
     Object.entries(entity.prototype.__types || {}).forEach(([key, type]) => {
       if (type === 'id') return;

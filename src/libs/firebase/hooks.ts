@@ -29,6 +29,7 @@ import {
   FirebaseConverter,
   FirestoreDecoratorType,
   isFirebaseEntity,
+  newClass,
 } from './libs';
 
 type StatType = 'idle' | 'progress' | 'finished' | 'error';
@@ -201,32 +202,31 @@ export const useFireDoc = <
   const path = properties.__collection!;
   const name = JSON.stringify({ path });
   const property = useRef<{ unsubscribe?: () => void; init?: boolean }>({}).current;
-  useEffect(() => {
-    property.unsubscribe?.();
-    property.unsubscribe = undefined;
-  }, []);
   const docQuery = useMemo(() => {
     if (!id) return undefined;
     return doc(collection(db, path), id).withConverter(FirebaseConverter);
   }, [name, id]);
-
   useEffect(() => {
-    property.unsubscribe?.();
     if (docQuery) {
       property.unsubscribe = onSnapshot(
         docQuery,
         { includeMetadataChanges: true },
         (result) => {
-          if (!result.metadata.fromCache) setState(['finished', result.data() as R]);
+          if (!result.metadata.fromCache)
+            setState(['finished', (result.data() ? result.data() : newClass(entity, { id })) as R]);
         },
         () => {
           setState(['error', undefined]);
         }
       );
     }
+    return () => {
+      property.unsubscribe?.();
+      property.unsubscribe = undefined;
+    };
   }, [docQuery]);
   const [state, setState] = useSSR<[StatType, R | undefined]>(
-    [name],
+    [name, String(id)],
     async (state, setState) => {
       const [status, contents] = state;
       if (id === undefined || id === null) {
@@ -238,7 +238,9 @@ export const useFireDoc = <
       }
       setState(['progress', contents]);
       await getDoc(docQuery)
-        .then((result) => setState(['finished', result.data() as R]))
+        .then((result) =>
+          setState(['finished', (result.data() ? result.data() : newClass(entity, { id })) as R])
+        )
         .catch(() => setState(['error', undefined]));
     },
     ['idle', undefined]

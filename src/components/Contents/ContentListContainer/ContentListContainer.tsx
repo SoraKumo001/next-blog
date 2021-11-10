@@ -5,28 +5,28 @@ import { useLoading } from '@/hooks/useLoading';
 import { firestore, useFireDocs } from '@/libs/firebase';
 import { Content } from '@/types/Content';
 import { Button } from '@mui/material';
-import { useAdmin } from '@/hooks/useLogin';
-interface Props { }
+import { useAdmin } from '@/hooks/useAdmin';
+import { classNames } from '@/libs/classNames';
+interface Props {}
 
 /**
  * ContentListContainer
  *
  * @param {Props} { }
  */
-export const ContentListContainer: FC<Props> = ({ }) => {
-  const isAdmin = useAdmin()
-  const { state, contents, dispatch } = useFireDocs(firestore, Content, {
+export const ContentListContainer: FC<Props> = ({}) => {
+  const isAdmin = useAdmin();
+  const { state, contents } = useFireDocs(firestore, Content, {
     order: ['updatedAt'],
     where: isAdmin ? undefined : ['visible', '==', true],
   });
   useLoading([state]);
   return (
     <div className={styled.root}>
-      {<Button onClick={dispatch}>更新</Button>}
       <div>
         {contents?.map((c) => (
           <Link key={c.id} passHref href={`/contents/${c.id}`}>
-            <div className={styled.content}>
+            <div className={classNames(styled.content, c.visible === false && styled.hidden)}>
               <div className={styled.image}>
                 <div>🤖</div>
               </div>

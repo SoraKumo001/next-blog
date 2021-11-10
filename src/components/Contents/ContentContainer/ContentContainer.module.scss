@@ -1,13 +1,7 @@
 .root {
   display: flex;
   justify-content: center;
-  .contents {
-    border-left: #dddddd 1px solid;
-    border-right: #dddddd 1px solid;
-    padding: 0 16px;
-    max-width: 1024px;
-    min-width: 512px;
-  }
+
   .edit {
     cursor: pointer;
     right: 16px;
@@ -19,8 +13,6 @@
     border: #dddddd solid 1px;
     padding: 8px;
     border-radius: 8px;
-  }
-  .date {
-    text-align: right;
+    color: black;
   }
 }

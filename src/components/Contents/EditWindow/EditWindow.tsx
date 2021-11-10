@@ -18,7 +18,7 @@ export interface Props {
   // srcContent: EndPoints['get']['contents'] | undefined;
   content: Content;
   contentBody: ContentBody;
-  onUpdate?: any
+  onUpdate?: any;
   onSave: () => void;
   onClose: () => void;
 }
@@ -78,13 +78,18 @@ export const EditWindow: FC<Props> = memo(({ content, contentBody, onUpdate, onC
           </Button>
           <div className={styled.group}>
             <div className={styled.label}>Visible</div>
-            <Switch defaultChecked={content.visible} onChange={(e) => content.visible = e.currentTarget.checked} />
+            <Switch
+              defaultChecked={content.visible}
+              onChange={(e) => (content.visible = e.currentTarget.checked)}
+            />
           </div>
           <TextField
             className={styled.input}
             size="small"
             defaultValue={content.title}
-            onChange={(e) => { content.title = e.currentTarget.value }}
+            onChange={(e) => {
+              content.title = e.currentTarget.value;
+            }}
             label="Title"
           />
 
@@ -106,7 +111,7 @@ export const EditWindow: FC<Props> = memo(({ content, contentBody, onUpdate, onC
         <MarkdownEditor
           className={styled.markdown}
           defaultValue={contentBody.body}
-          onUpdate={(text) => contentBody.body = text}
+          onUpdate={(text) => (contentBody.body = text)}
           event={event}
         />
       </div>

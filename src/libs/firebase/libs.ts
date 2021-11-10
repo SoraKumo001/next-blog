@@ -11,8 +11,9 @@ import {
 
 export const saveDoc = async <T extends Object & { [key in keyof T]: T[key] }>(
   db: Firestore,
-  entity: T
+  entity?: T
 ) => {
+  if (!entity) return undefined;
   const properties = Object.getPrototypeOf(entity) as FirestoreDecoratorType;
   const { __collection, __types } = properties;
   if (!__collection || !__types) return;

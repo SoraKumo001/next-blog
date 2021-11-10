@@ -3,12 +3,6 @@ import { Admin } from '@/types/Admins';
 import { GoogleAuthProvider } from '@firebase/auth';
 import { useEffect } from 'react';
 import { useSystemDispatch } from './useSystemDispatch';
-import { useSystemSelector } from './useSystemSelector';
-
-export const useAdmin = () => {
-  const user = useSystemSelector((state) => state.login);
-  return user?.isAdmin;
-};
 
 export const useLogin = () => {
   const systemDispatch = useSystemDispatch();

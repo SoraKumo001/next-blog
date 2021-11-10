@@ -4,6 +4,9 @@
     &:not(:first-child) {
       margin-top: 16px;
     }
+    &:hover {
+      border: #a0a0e0 solid 1px;
+    }
     cursor: pointer;
     position: relative;
     display: flex;
@@ -23,5 +26,8 @@
       font-size: 24px;
       font-weight: bold;
     }
+  }
+  .hidden {
+    background: #f0f0f0;
   }
 }

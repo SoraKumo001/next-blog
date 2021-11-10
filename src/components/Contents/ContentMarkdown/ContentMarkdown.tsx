@@ -24,8 +24,7 @@ const getTreeText = (
   return (node.value || '') + (node.children?.map((node) => getTreeText(node)).join('') || '');
 };
 
-interface Props {
-}
+interface Props {}
 
 /**
  * ContentMarkdown
@@ -60,11 +59,7 @@ export const ContentMarkdown: FC<Props> = ({ children }) => {
     return m ? `https://drive.google.com/uc?export=download&id=${m[1]}` : src;
   };
   return (
-    <ReactMarkdown
-      className={styled.root}
-      components={components}
-      transformImageUri={handleImage}
-    >
+    <ReactMarkdown className={styled.root} components={components} transformImageUri={handleImage}>
       {getNodeText(children)}
     </ReactMarkdown>
   );

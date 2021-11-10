@@ -1,44 +1,51 @@
 /* eslint-disable @next/next/no-page-custom-font */
-import { ServerStyleSheets } from "@mui/styles";
-import Document, { Head, Html, Main, NextScript, DocumentContext } from "next/document";
-import React from "react";
-import { ServerStyleSheet } from "styled-components";
+import { ServerStyleSheets } from '@mui/styles';
+import Document, { Head, Html, Main, NextScript, DocumentContext } from 'next/document';
+import React from 'react';
+import { ServerStyleSheet } from 'styled-components';
 
 const AppDocument = () => (
-    <Html lang="ja-JP">
-        <Head>
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-        </Head>
-        <body>
-            <Main />
-            <NextScript />
-        </body>
-    </Html>
+  <Html lang="ja-JP">
+    <Head>
+      <link
+        rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      />
+      <meta charSet="UTF-8" />
+      <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+    </Head>
+    <body>
+      <Main />
+      <NextScript />
+    </body>
+  </Html>
 );
 
 AppDocument.getInitialProps = async (ctx: DocumentContext) => {
-    const MuiSheets = new ServerStyleSheets();
-    const styledComponentsSheet = new ServerStyleSheet();
-    const originalRenderPage = ctx.renderPage;
+  const MuiSheets = new ServerStyleSheets();
+  const styledComponentsSheet = new ServerStyleSheet();
+  const originalRenderPage = ctx.renderPage;
 
-    try {
-        ctx.renderPage = () =>
-            originalRenderPage({
-                enhanceApp: (App) => (props) => styledComponentsSheet.collectStyles(MuiSheets.collect(<App {...props} />)),
-            });
+  try {
+    ctx.renderPage = () =>
+      originalRenderPage({
+        enhanceApp: (App) => (props) =>
+          styledComponentsSheet.collectStyles(MuiSheets.collect(<App {...props} />)),
+      });
 
-        const initialProps = await Document.getInitialProps(ctx);
+    const initialProps = await Document.getInitialProps(ctx);
 
-        return {
-            ...initialProps,
-            styles: [
-                ...React.Children.toArray(initialProps.styles),
-                MuiSheets.getStyleElement(),
-                styledComponentsSheet.getStyleElement(),
-            ],
-        };
-    } finally {
-        styledComponentsSheet.seal();
-    }
+    return {
+      ...initialProps,
+      styles: [
+        ...React.Children.toArray(initialProps.styles),
+        MuiSheets.getStyleElement(),
+        styledComponentsSheet.getStyleElement(),
+      ],
+    };
+  } finally {
+    styledComponentsSheet.seal();
+  }
 };
-export default AppDocument
+export default AppDocument;

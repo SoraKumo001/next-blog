@@ -29,15 +29,11 @@ const App = (props: AppProps & { cache: CachesType }) => {
     </SystemContext.Provider>
   );
 };
-let srcCache = {}
+
 App.getInitialProps = async ({ Component, router, AppTree, ctx }: AppContext) => {
-  if (ctx.res) {
-    ctx.res.setHeader("Cache-Control", "public, max-age=300");
-  }
   const cache = await getDataFromTree(
-    <AppTree Component={Component} pageProps={{}} router={router} />, { cache: srcCache }
+    <AppTree Component={Component} pageProps={{}} router={router} />
   );
-  srcCache = cache
   return { cache };
 };
 export default App;

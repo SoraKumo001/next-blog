@@ -8,7 +8,10 @@ const config = {
   },
   webpack: (config, { isServer }) => {
     if(isServer){ 
-      config.externals = [...config.externals,{"firebase/firestore":true}]
+      config.externals = [...config.externals,
+        {"firebase/app":true},
+        {"firebase/auth":true},
+        {"firebase/firestore":true}]
     }
     return config
   },

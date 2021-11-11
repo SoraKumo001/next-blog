@@ -20,7 +20,6 @@ export const ContentContainer: FC<Props> = ({ id }) => {
   const { state: stateBody, contents: contentBody } = useFireDoc(firestore, ContentBody, id);
   useLoading([stateContent, stateBody]);
   if (!content || !contentBody) return null;
-
   return (
     <div className={styled.root}>
       <Link href={`/contents/edit/${id}`}>

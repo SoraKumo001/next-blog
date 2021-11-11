@@ -33,10 +33,11 @@ import {
 } from './libs';
 
 type StatType = 'idle' | 'progress' | 'finished' | 'error';
-type LoginType = 'idle' | 'progress' | 'logined' | 'logouted' | 'error';
+type LoginType = 'idle' | 'logined' | 'logouted' | 'error';
 
 export const useAuth = (auth: Auth, provider: GoogleAuthProvider) => {
-  const [state, setState] = useState<LoginType>('idle');
+  const [state, setState] = useState<StatType>('idle');
+  const [loginState, setLoginState] = useState<LoginType>('idle');
   const [error, setError] = useState<unknown>('');
   const [credential, setCredential] = useState<UserCredential>();
   const dispatch = useCallback(
@@ -50,7 +51,8 @@ export const useAuth = (auth: Auth, provider: GoogleAuthProvider) => {
             signInWithCredential(auth, GoogleAuthProvider.credential(token))
               .then((result) => {
                 setCredential(result);
-                setState('logined');
+                setState('finished');
+                setLoginState('logined');
               })
               .catch((e) => {
                 setError(e);
@@ -60,10 +62,12 @@ export const useAuth = (auth: Auth, provider: GoogleAuthProvider) => {
             signInWithPopup(auth, provider)
               .then((result) => {
                 setCredential(result);
-                setState('logined');
+                setState('finished');
+                setLoginState('logined');
               })
               .catch((e) => {
                 setError(e);
+                setLoginState('error');
                 setState('error');
               });
           }
@@ -73,18 +77,20 @@ export const useAuth = (auth: Auth, provider: GoogleAuthProvider) => {
           signOut(auth)
             .then(() => {
               setCredential(undefined);
-              setState('logouted');
+              setState('finished');
+              setLoginState('logouted');
             })
             .catch((e) => {
               setError(e);
               setState('error');
+              setLoginState('error');
             });
           break;
       }
     },
     [auth]
   );
-  return { state, error, credential, dispatch };
+  return { state, loginState, error, credential, dispatch };
 };
 
 export const useFireDocs = <

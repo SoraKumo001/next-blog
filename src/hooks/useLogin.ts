@@ -7,7 +7,7 @@ import { useSystemDispatch } from './useSystemDispatch';
 export const useLogin = () => {
   const systemDispatch = useSystemDispatch();
   const { state, dispatch, credential } = useAuth(firebaseAuth, authProvider);
-  const { contents } = useFireDoc(firestore, Admin, credential?.user.email);
+  const { state: fireState, contents } = useFireDoc(firestore, Admin, credential?.user.email);
   useEffect(() => {
     const token = sessionStorage.getItem('token');
     if (token) {
@@ -28,6 +28,6 @@ export const useLogin = () => {
     } else {
       systemDispatch({ type: 'logout', payload: undefined });
     }
-  }, [contents]);
+  }, [fireState]);
   return { state, dispatch, credential };
 };

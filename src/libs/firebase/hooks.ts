@@ -226,7 +226,7 @@ export const useFireDoc = <
         docQuery,
         { includeMetadataChanges: true },
         (result) => {
-          if (!result.metadata.fromCache)
+          if (typeof window === 'undefined' || !result.metadata.fromCache)
             setState(['finished', (result.data() ? result.data() : newClass(entity, { id })) as R]);
         },
         () => {

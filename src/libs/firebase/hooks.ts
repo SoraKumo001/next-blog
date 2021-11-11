@@ -148,20 +148,28 @@ export const useFireDocs = <
 
   useEffect(() => {
     property.unsubscribe?.();
-    if (docQuery) {
-      property.unsubscribe = onSnapshot(
-        docQuery,
-        { includeMetadataChanges: true },
-        (result) => {
-          if (!result.metadata.fromCache)
-            setState(['finished', result.docs.map((v) => v.data()) as R[]]);
-        },
-        () => {
-          setState(['error', undefined]);
-        }
-      );
-    }
+    const handle =
+      docQuery &&
+      setTimeout(() => {
+        property.unsubscribe = onSnapshot(
+          docQuery,
+          { includeMetadataChanges: true },
+          (result) => {
+            if (!result.metadata.fromCache)
+              setState(['finished', result.docs.map((v) => v.data()) as R[]]);
+          },
+          () => {
+            setState(['error', undefined]);
+          }
+        );
+      }, 3000);
+    return () => {
+      handle && clearTimeout(handle);
+      property.unsubscribe?.();
+      property.unsubscribe = undefined;
+    };
   }, [docQuery]);
+
   const [state, setState] = useSSR<[StatType, R[] | undefined]>(
     [name],
     async (state, setState) => {

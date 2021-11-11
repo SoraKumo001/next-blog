@@ -2196,10 +2196,10 @@
     remark-parse "^10.0.0"
     unified "^10.1.0"
 
-"@react-libraries/use-global-state@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@react-libraries/use-global-state/-/use-global-state-1.0.7.tgz#caf82957ef194fdd9674ffdc134c18894f782557"
-  integrity sha512-12oucoYp+/mu+2OC0GEbNAA/i0O4DBHN0QPKC/GG6+BQKBbkUGTpqqaV9pa0YoYJqUl16dPQ++H7RC2aWOKQeQ==
+"@react-libraries/use-global-state@^1.0.8":
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/@react-libraries/use-global-state/-/use-global-state-1.0.8.tgz#83e179d242b85d5958baf9d882425470c673fa1c"
+  integrity sha512-N23Pdl1dXbcsan6kkk1tMsUTvxRYarcvuCcSX8HjvGyyFNPvCFonvtn8uaGF36wuYS53mpROmW3TK6kp5eK/JA==
   dependencies:
     react "*"
     react-dom "*"
@@ -2212,12 +2212,12 @@
     react "*"
     react-dom "*"
 
-"@react-libraries/use-ssr@^1.0.7":
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/@react-libraries/use-ssr/-/use-ssr-1.0.7.tgz#9ceca14564033361b1727d2cb11cb49320bb7d6c"
-  integrity sha512-FfRk8ZWfR7cJwpWnKn6T4772o3mYJpNOvhy6off3QZEJHDc6mQJtOeemTd6l91tFXbZ8RorH/Qdxj1r+Zfp0DA==
+"@react-libraries/use-ssr@^1.0.9":
+  version "1.0.9"
+  resolved "https://registry.yarnpkg.com/@react-libraries/use-ssr/-/use-ssr-1.0.9.tgz#daa6602271d378ccb132835027ad34bb3a689a1e"
+  integrity sha512-pN0utu8Uc2R6bCzLByxlHpYS6gKa8sMEO9J7gONuDVyXShiofIe/WkbiNNyxT58q+zFIb3krwxoV1dSF9LbPdg==
   dependencies:
-    "@react-libraries/use-global-state" "^1.0.7"
+    "@react-libraries/use-global-state" "^1.0.8"
     next "*"
     react "*"
     react-dom "*"

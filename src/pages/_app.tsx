@@ -29,10 +29,12 @@ const App = (props: AppProps & { cache: CachesType }) => {
     </SystemContext.Provider>
   );
 };
+let srcCache = {}
 App.getInitialProps = async ({ Component, router, AppTree }: AppContext) => {
   const cache = await getDataFromTree(
-    <AppTree Component={Component} pageProps={{}} router={router} />
+    <AppTree Component={Component} pageProps={{}} router={router} />, { cache: srcCache }
   );
+  srcCache = cache
   return { cache };
 };
 export default App;

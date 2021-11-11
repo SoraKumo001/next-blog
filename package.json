@@ -23,7 +23,7 @@
     "@mui/system": "^5.1.0",
     "@react-libraries/markdown-editor": "^1.0.7",
     "@react-libraries/use-local-event": "^1.0.2",
-    "@react-libraries/use-ssr": "^1.0.7",
+    "@react-libraries/use-ssr": "^1.0.9",
     "@react-libraries/virtual-window": "^1.0.7",
     "@types/react-syntax-highlighter": "^13.5.2",
     "@types/styled-components": "^5.1.15",

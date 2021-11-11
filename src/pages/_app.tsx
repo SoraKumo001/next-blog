@@ -8,12 +8,18 @@ import React from 'react';
 import 'normalize.css';
 import { LocalizationProvider } from '@mui/lab';
 import { FooterButtons } from '@/components/System/FooterButtons';
+import Head from 'next/head';
 
 const App = (props: AppProps & { cache: CachesType }) => {
   const { Component, cache } = props;
   createCache(cache);
   return (
     <SystemContext.Provider>
+      <Head>
+        <meta charSet="UTF-8" />
+        <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
+      </Head>
       <LocalizationProvider dateAdapter={DateAdapter}>
         <FooterButtons />
         <Component />

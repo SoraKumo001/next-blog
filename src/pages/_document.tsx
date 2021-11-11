@@ -11,9 +11,6 @@ const AppDocument = () => (
         rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
       />
-      <meta charSet="UTF-8" />
-      <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
-      <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
     </Head>
     <body>
       <Main />

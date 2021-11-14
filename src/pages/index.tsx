@@ -1,4 +1,4 @@
-import { ContentListContainer } from '@/components/Contents/ContentListContainer';
+import { ContentListContainer } from '@/components/ContentList/ContentListContainer';
 import React from 'react';
 
 const Page = () => {

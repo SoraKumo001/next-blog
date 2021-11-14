@@ -2,7 +2,6 @@ import React, { AnimationEventHandler, FC } from 'react';
 import styled from './Notification.module.scss';
 import IconInfo from '@mui/icons-material/InfoOutlined';
 interface Props {
-  fade?: boolean;
   onClose?: () => void;
   onAnimationEnd?: AnimationEventHandler<HTMLDivElement>;
 }

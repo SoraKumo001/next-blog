@@ -1,6 +1,7 @@
 import {
   addDoc,
   collection,
+  deleteDoc as delDoc,
   doc,
   FieldValue,
   Firestore,
@@ -30,6 +31,23 @@ export const saveDoc = async <T extends Object & { [key in keyof T]: T[key] }>(
     );
     return result.id;
   }
+};
+export const deleteDoc = async <T extends Object & { [key in keyof T]: T[key] }>(
+  db: Firestore,
+  entity?: T
+) => {
+  if (!entity) return undefined;
+  const properties = Object.getPrototypeOf(entity) as FirestoreDecoratorType;
+  const { __collection, __types } = properties;
+  if (!__collection || !__types) return;
+  const idName = Object.entries(__types).find(([_, value]) => value === 'id')?.[0] as keyof T;
+  if (!idName) return;
+  const id = entity[idName] as string | undefined;
+  if (id) {
+    await delDoc(doc(db, __collection, id));
+    return id;
+  }
+  return false;
 };
 const DocmentSymbol = Symbol('FirestoraDoc');
 export type FirestorTypes =

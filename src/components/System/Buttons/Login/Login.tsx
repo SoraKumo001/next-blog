@@ -7,14 +7,14 @@ import IconLogout from '@mui/icons-material/LogoutOutlined';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useLogin } from '@/hooks/useLogin';
 
-interface Props { }
+interface Props {}
 
 /**
  * Login
  *
  * @param {Props} { }
  */
-export const Login: FC<Props> = ({ }) => {
+export const Login: FC<Props> = ({}) => {
   const { state, dispatch } = useLogin();
   const isAdmin = useAdmin();
 

@@ -1,13 +1,30 @@
 .root {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: scroll;
+
+  .title {
+    text-align: center;
+    border-bottom: 2px lightgray solid;
+    padding: 4px;
+  }
+  .split {
+    display: inline-flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: wrap;
+    height: 100%;
+    width: 100%;
+    overflow: auto;
+  }
   .contents {
-    border-left: #dddddd 1px solid;
-    border-right: #dddddd 1px solid;
+    border: #dddddd 2px solid;
+    border-radius: 8px;
     padding: 0 16px;
     max-width: 1024px;
-    min-width: 512px;
-  }
-
-  .date {
-    text-align: right;
+    overflow: hidden;
+    background: white;
+    z-index: 1;
   }
 }

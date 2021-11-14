@@ -1,0 +1,14 @@
+version: '3.7'
+services:
+  next-blog:
+    container_name: next-blog
+    build:
+      context: ..
+      dockerfile: ./docker/Dockerfile
+    restart: always
+    networks:
+      - default
+      - shared-network
+networks:
+  shared-network:
+    external: true

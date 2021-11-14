@@ -10,7 +10,11 @@
     "export": "next export",
     "lint:fix": "next lint --fix && prettier -w src",
     "storybook": "start-storybook -p 9001",
-    "sf": "node bin/sf"
+    "sf": "node bin/sf",
+    "docker:start": "docker compose -p next-blog -f docker/docker-compose.yml up -d",
+    "docker:build": "docker compose -p next-blog -f docker/docker-compose.yml build --parallel --compress --pull",
+    "docker:upload": "docker save  next-blog_next-blog | env-exec -e .env-deploy docker load",
+    "deploy": "yarn docker:build && yarn docker:upload && docker-compose --env-file .env-deploy -p next-blog -f docker/docker-compose.yml up -d"
   },
   "dependencies": {
     "@date-io/date-fns": "^2.11.0",
@@ -18,23 +22,25 @@
     "@mui/icons-material": "^5.1.0",
     "@mui/lab": "^5.0.0-alpha.54",
     "@mui/material": "^5.1.0",
+    "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest",
     "@mui/styled-engine-sc": "^5.1.0",
     "@mui/styles": "^5.1.0",
     "@mui/system": "^5.1.0",
     "@react-libraries/markdown-editor": "^1.0.7",
     "@react-libraries/use-local-event": "^1.0.2",
-    "@react-libraries/use-ssr": "^1.0.9",
+    "@react-libraries/use-local-state": "^1.0.12",
     "@react-libraries/virtual-window": "^1.0.7",
-    "@types/react-syntax-highlighter": "^13.5.2",
     "@types/styled-components": "^5.1.15",
     "date-fns": "^2.25.0",
-    "firebase": "^9.4.0",
+    "firebase": "^9.4.1",
     "next": "^12.0.3",
     "normalize.css": "^8.0.1",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-helmet": "^6.1.0",
     "react-markdown": "^7.1.0",
     "react-simplemde-editor": "^5.0.2",
+    "react-syntax-highlighter": "^15.4.5",
     "styled-components": "^5.3.3"
   },
   "devDependencies": {
@@ -50,7 +56,10 @@
     "@types/node": "^16.11.7",
     "@types/react": "^17.0.34",
     "@types/react-dom": "^17.0.11",
+    "@types/react-helmet": "^6.1.4",
+    "@types/react-syntax-highlighter": "^13.5.2",
     "css-loader": "^6.5.1",
+    "env-exec": "^1.0.0",
     "eslint": "8.2.0",
     "eslint-config-next": "12.0.3",
     "eslint-config-prettier": "^8.3.0",
@@ -58,9 +67,9 @@
     "sass": "^1.43.4",
     "sass-loader": "^12.3.0",
     "storybook-addon-next-router": "^3.0.8",
-    "tsconfig-paths-webpack-plugin": "^3.5.1",
+    "tsconfig-paths-webpack-plugin": "^3.5.2",
     "typescript": "^4.4.4",
-    "webpack": "^5.63.0"
+    "webpack": "^5.64.0"
   },
   "resolutions": {
     "@mui/styled-engine": "npm:@mui/styled-engine-sc@latest"

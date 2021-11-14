@@ -1,17 +1,17 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect } from 'react';
 import { useLoading } from '@/hooks/useLoading';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useLogin } from '@/hooks/useLogin';
 import { useRouter } from 'next/router';
-interface Props { }
+interface Props {}
 
 /**
  * LoginContainer
  *
  * @param {Props} { }
  */
-export const LoginContainer: FC<Props> = ({ }) => {
-  const router = useRouter()
+export const LoginContainer: FC<Props> = ({}) => {
+  const router = useRouter();
   const isAdmin = useAdmin();
   const { state, dispatch } = useLogin();
   useEffect(() => {
@@ -20,11 +20,10 @@ export const LoginContainer: FC<Props> = ({ }) => {
     } else {
       dispatch({ type: 'login' });
     }
-  }, [])
+  }, []);
   useEffect(() => {
-    if (state === 'finished' || state === "error")
-      router.back()
-  }, [state])
+    if (state === 'finished' || state === 'error') router.back();
+  }, [state]);
   useLoading([state]);
-  return null
-}
+  return null;
+};

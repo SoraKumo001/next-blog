@@ -13,23 +13,19 @@ interface Props {}
  * @param {Props} { }
  */
 export const NotificationContainer: FC<Props> = ({}) => {
-  const [fade, setFade] = useState(false);
   const notifications = useSystemSelector((state) => state.notification);
   const timer = useRef<number>();
   const dispatch = useSystemDispatch();
-  const handleClose = useCallback(() => {
-    setFade(true);
-  }, []);
   useEffect(() => {
     if (notifications?.length === 0) return;
     timer.current = Date.now();
     let handle: ReturnType<typeof setInterval> | undefined = setInterval(() => {
       const elapse = Date.now() - timer.current!;
       if (
-        (!fade && notifications && notifications.length > 1 && elapse >= fadeNextTime) ||
+        (notifications && notifications.length > 1 && elapse >= fadeNextTime) ||
         elapse >= fadeTime
       ) {
-        setFade(true);
+        onAnimationEnd();
       }
       if (!notifications?.length) {
         handle && clearInterval(handle);
@@ -37,9 +33,8 @@ export const NotificationContainer: FC<Props> = ({}) => {
       }
     }, 10);
     return () => handle && clearInterval(handle);
-  }, [notifications, fade]);
+  }, [notifications]);
   const onAnimationEnd = useCallback(() => {
-    setFade(false);
     dispatch({ type: 'removeNotification' });
     timer.current = Date.now();
   }, [dispatch]);
@@ -48,9 +43,8 @@ export const NotificationContainer: FC<Props> = ({}) => {
     <div className={styled.root}>
       <Notification
         key={String(notifications[0])}
-        fade={fade}
         onAnimationEnd={onAnimationEnd}
-        onClose={handleClose}
+        onClose={onAnimationEnd}
       >
         {notifications[0]}
       </Notification>

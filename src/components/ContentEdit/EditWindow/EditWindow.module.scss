@@ -1,10 +1,6 @@
 .root {
   background: rgba($color: #f0f0f0f0, $alpha: 0.97) !important;
-  opacity: 0.01;
   transition-duration: 0.5s;
-  &:hover {
-    opacity: 1;
-  }
   .contents {
     //overflow: auto;
     display: flex;

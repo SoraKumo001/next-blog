@@ -1,0 +1,11 @@
+.root {
+  position: relative;
+  padding: 16px;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  .edit {
+    position: relative;
+    z-index: 2;
+  }
+}

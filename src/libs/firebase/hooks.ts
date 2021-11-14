@@ -23,7 +23,7 @@ import {
   getDoc,
   doc,
 } from 'firebase/firestore';
-import { useSSR } from '@react-libraries/use-ssr';
+import { useSSR } from '@/libs/useSSR';
 import {
   convertFirebaseEntity,
   FirebaseConverter,
@@ -113,10 +113,6 @@ export const useFireDocs = <
   const path = properties.__collection!;
   const name = JSON.stringify({ path, ...options });
   const property = useRef<{ unsubscribe?: () => void; init?: boolean }>({}).current;
-  useEffect(() => {
-    property.unsubscribe?.();
-    property.unsubscribe = undefined;
-  }, []);
   const docQuery = useMemo(() => {
     const { where: _where, limit: _limit, order, start, startAfter: _startAfter, end } = options;
 
@@ -162,7 +158,8 @@ export const useFireDocs = <
             setState(['error', undefined]);
           }
         );
-      }, 3000);
+      }, 10000);
+
     return () => {
       handle && clearTimeout(handle);
       property.unsubscribe?.();
@@ -221,20 +218,26 @@ export const useFireDoc = <
     return doc(collection(db, path), id).withConverter(FirebaseConverter);
   }, [name, id]);
   useEffect(() => {
-    if (docQuery) {
-      property.unsubscribe = onSnapshot(
-        docQuery,
-        { includeMetadataChanges: true },
-        (result) => {
-          if (typeof window === 'undefined' || !result.metadata.fromCache)
-            setState(['finished', (result.data() ? result.data() : newClass(entity, { id })) as R]);
-        },
-        () => {
-          setState(['error', undefined]);
-        }
-      );
-    }
+    const handle =
+      docQuery &&
+      setTimeout(() => {
+        property.unsubscribe = onSnapshot(
+          docQuery,
+          { includeMetadataChanges: true },
+          (result) => {
+            if (typeof window === 'undefined' || !result.metadata.fromCache)
+              setState([
+                'finished',
+                (result.data() ? result.data() : newClass(entity, { id })) as R,
+              ]);
+          },
+          () => {
+            setState(['error', undefined]);
+          }
+        );
+      }, 10000);
     return () => {
+      handle && clearTimeout(handle);
       property.unsubscribe?.();
       property.unsubscribe = undefined;
     };
@@ -247,7 +250,7 @@ export const useFireDoc = <
         setState(['idle', undefined]);
         return;
       }
-      if (status !== 'idle' || !docQuery) {
+      if (!docQuery || status !== 'idle') {
         return;
       }
       setState(['progress', contents]);

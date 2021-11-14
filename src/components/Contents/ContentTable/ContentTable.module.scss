@@ -1,0 +1,25 @@
+.root {
+  display: inline-block;
+  padding: 8px;
+  margin-bottom: 16px;
+  position: sticky;
+  top: 0px;
+  .box {
+    min-width: 240px;
+    max-width: 240px;
+    padding: 8px;
+    border-radius: 8px;
+    box-shadow: 0 0 8px #dddddd88;
+    > .item {
+      color: black;
+      text-decoration: none;
+      border-bottom: solid 1px transparent;
+      display: block;
+      margin-bottom: 8px;
+      cursor: pointer;
+      &:hover {
+        border-bottom: solid 1px gray;
+      }
+    }
+  }
+}

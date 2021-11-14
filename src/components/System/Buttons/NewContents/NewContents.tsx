@@ -5,20 +5,20 @@ import { Content } from '@/types/Content';
 import { firestore, newClass, saveDoc } from '@/libs/firebase';
 import { useRouter } from 'next/router';
 import { useAdmin } from '@/hooks/useAdmin';
-interface Props { }
+interface Props {}
 
 /**
  * NewContents
  *
  * @param {Props} { }
  */
-export const NewContents: FC<Props> = ({ }) => {
+export const NewContents: FC<Props> = ({}) => {
   const isAdmin = useAdmin();
   const router = useRouter();
   const handleClick = () => {
     const contents = newClass(Content, { title: 'new', visible: false, keywords: [] });
     saveDoc(firestore, contents).then((id) => {
-      router.push(`/contents/edit/${id}`);
+      router.push(`/contents/${id}/edit`);
     });
   };
   if (!isAdmin) return null;

@@ -10,6 +10,7 @@ import '@/styles/app.scss';
 import { LocalizationProvider } from '@mui/lab';
 import { FooterButtons } from '@/components/System/FooterButtons';
 import Head from 'next/head';
+import { HeaderContainer } from '@/components/System/HeaderContainer';
 
 const App = (props: AppProps & { cache: CachesType }) => {
   const { Component, cache } = props;
@@ -22,8 +23,9 @@ const App = (props: AppProps & { cache: CachesType }) => {
         <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
       </Head>
       <LocalizationProvider dateAdapter={DateAdapter}>
-        <FooterButtons />
+        <HeaderContainer />
         <Component />
+        <FooterButtons />
         <NotificationContainer />
         <LoadingContainer />
       </LocalizationProvider>

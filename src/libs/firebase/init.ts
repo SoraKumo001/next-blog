@@ -1,3 +1,4 @@
+import { getStorage } from '@firebase/storage';
 import { initializeApp } from 'firebase/app';
 import { getAuth, GoogleAuthProvider } from 'firebase/auth';
 import { enableMultiTabIndexedDbPersistence, getFirestore } from 'firebase/firestore';
@@ -15,5 +16,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 export const firebaseAuth = getAuth(app);
 export const firestore = getFirestore(app);
+export const firestorage = getStorage(app);
 typeof window !== 'undefined' && enableMultiTabIndexedDbPersistence(firestore).catch(() => null);
 export const authProvider = new GoogleAuthProvider();

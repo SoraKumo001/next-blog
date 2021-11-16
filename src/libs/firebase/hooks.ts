@@ -31,6 +31,14 @@ import {
   isFirebaseEntity,
   newClass,
 } from './libs';
+import {
+  FirebaseStorage,
+  getDownloadURL,
+  ref,
+  uploadBytes,
+  UploadMetadata,
+} from 'firebase/storage';
+import { dispatchMarkdown } from '@react-libraries/markdown-editor';
 
 type StatType = 'idle' | 'progress' | 'finished' | 'error';
 type LoginType = 'idle' | 'logined' | 'logouted' | 'error';
@@ -88,7 +96,7 @@ export const useAuth = (auth: Auth, provider: GoogleAuthProvider) => {
           break;
       }
     },
-    [auth]
+    [auth, provider]
   );
   return { state, loginState, error, credential, dispatch };
 };
@@ -140,6 +148,7 @@ export const useFireDocs = <
     const c = collection(db, path);
     const q = query(c, ...constrains).withConverter(FirebaseConverter);
     return q;
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   useEffect(() => {
@@ -158,13 +167,14 @@ export const useFireDocs = <
             setState(['error', undefined]);
           }
         );
-      }, 10000);
+      }, 100);
 
     return () => {
       handle && clearTimeout(handle);
       property.unsubscribe?.();
       property.unsubscribe = undefined;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [docQuery]);
 
   const [state, setState] = useSSR<[StatType, R[] | undefined]>(
@@ -216,7 +226,7 @@ export const useFireDoc = <
   const docQuery = useMemo(() => {
     if (!id) return undefined;
     return doc(collection(db, path), id).withConverter(FirebaseConverter);
-  }, [name, id]);
+  }, [id, db, path]);
   useEffect(() => {
     const handle =
       docQuery &&
@@ -235,12 +245,13 @@ export const useFireDoc = <
             setState(['error', undefined]);
           }
         );
-      }, 10000);
+      }, 100);
     return () => {
       handle && clearTimeout(handle);
       property.unsubscribe?.();
       property.unsubscribe = undefined;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [docQuery]);
   const [state, setState] = useSSR<[StatType, R | undefined]>(
     [name, String(id)],
@@ -278,4 +289,29 @@ export const useFireDoc = <
     }
   }
   return { dispatch, state: state[0], contents: state[1] };
+};
+export const useFireUpload = () => {
+  const [state, setState] = useState<StatType>('idle');
+  const dispatch = useCallback(
+    async (
+      storage: FirebaseStorage,
+      path: string,
+      data: Blob | Uint8Array | ArrayBuffer,
+      metadata?: UploadMetadata
+    ) => {
+      setState('progress');
+      const storageRef = ref(storage, path);
+      const url = await uploadBytes(storageRef, data, metadata)
+        .then(async () => await getDownloadURL(storageRef).catch(() => undefined))
+        .catch(() => undefined);
+      if (url) {
+        setState('finished');
+        return url;
+      }
+      setState('error');
+      return undefined;
+    },
+    []
+  );
+  return { state, dispatch };
 };

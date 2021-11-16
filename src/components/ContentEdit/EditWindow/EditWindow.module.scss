@@ -2,7 +2,6 @@
   background: rgba($color: #f0f0f0f0, $alpha: 0.97) !important;
   transition-duration: 0.5s;
   .contents {
-    //overflow: auto;
     display: flex;
     justify-content: center;
     flex-direction: column;
@@ -34,7 +33,7 @@
         }
       }
       .input {
-        width: 400px;
+        width: 360px;
       }
     }
     .markdown {

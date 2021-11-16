@@ -1,15 +1,19 @@
 .root {
-  display: inline-block;
   padding: 8px;
   margin-bottom: 16px;
   position: sticky;
-  top: 0px;
+  top: 80px;
   .box {
     min-width: 240px;
     max-width: 240px;
     padding: 8px;
     border-radius: 8px;
     box-shadow: 0 0 8px #dddddd88;
+    .title {
+      font-weight: bold;
+      text-align: center;
+      line-height: 32px;
+    }
     > .item {
       color: black;
       text-decoration: none;

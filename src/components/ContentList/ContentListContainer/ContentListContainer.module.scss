@@ -1,30 +1,48 @@
 .root {
-  padding: 16px;
+  .list {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    max-width: 1300px;
+    overflow: hidden;
+    justify-content: center;
+  }
   .content {
-    &:not(:first-child) {
-      margin-top: 16px;
-    }
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+    box-sizing: border-box;
+    margin: 16px;
+    padding: 16px;
+    width: min(90%, 600px);
+    max-width: 600px;
+
     &:hover {
       border: #a0a0e0 solid 1px;
     }
     cursor: pointer;
     position: relative;
-    display: flex;
+    display: inline-flex;
     height: 128px;
     border: #dddddd solid 1px;
     border-radius: 16px;
-
+    :nth-child(2) {
+      flex: 1;
+      overflow: hidden;
+    }
     .image {
       display: flex;
       align-items: center;
       justify-items: center;
-      padding: 16px;
       font-size: 64px;
+      margin-right: 16px;
     }
     .title {
+      overflow: hidden;
       margin: 16px 0;
       font-size: 24px;
       font-weight: bold;
+      text-overflow: ellipsis;
     }
   }
   .hidden {

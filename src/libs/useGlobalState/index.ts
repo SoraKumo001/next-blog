@@ -142,10 +142,11 @@ export const useGlobalState: {
     (data: T | ((data: T) => T)) => void
   ];
 } = <T>(keys: string | string[], initialData?: T | (() => T)) => {
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const key = useMemo(() => NormalizeKey(keys), Array.isArray(keys) ? keys : [keys]);
   const property = useRef<{ keyName: string }>({ keyName: key }).current;
-  const c = useContext<ContextType>(context) || globalContext;
-  const { renderMap, initialKeys, initialDatas, cache } = c;
+  const con = useContext<ContextType>(context) || globalContext;
+  const { renderMap, initialKeys, initialDatas, cache } = con;
 
   type RenderMap = Map<string, Set<Render<T>>>;
   const [state, render] = useState<T | undefined>(
@@ -153,17 +154,19 @@ export const useGlobalState: {
   );
   const dispatch = useCallback(
     (data: T | ((data: T) => T)) => {
-      mutate(keys, data, c);
+      mutate(keys, data, con);
     },
-    [key]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [key, con]
   );
   let init = false;
   useEffect(() => {
     const renders = renderMap.get(key)!;
     init && renders.forEach((r) => r(cache[key]));
     return () => {
-      (renderMap as RenderMap).get(key)?.delete(render);
+      // eslint-disable-next-line react-hooks/exhaustive-deps
       init = false;
+      (renderMap as RenderMap).get(key)?.delete(render);
     };
   }, [key]);
   if (initialData !== undefined && !initialKeys.has(key)) {

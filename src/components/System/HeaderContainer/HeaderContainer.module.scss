@@ -1,0 +1,18 @@
+.root {
+  position: sticky;
+  top: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 0;
+  background: lightsteelblue;
+  white-space: nowrap;
+  z-index: 2;
+  .title {
+    max-width: 80%;
+    width: 1024px;
+    font-size: 24px;
+    font-weight: bold;
+    color: darkblue;
+  }
+}

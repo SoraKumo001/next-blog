@@ -1,16 +1,21 @@
-import React, { FC, memo, useEffect, useRef, useState } from 'react';
+import React, { FC, memo, useCallback } from 'react';
 import styled from './EditWindow.module.scss';
 import { VirtualWindow } from '@react-libraries/virtual-window';
-import { MarkdownEditor, useMarkdownEditor } from '@react-libraries/markdown-editor';
+import {
+  dispatchMarkdown,
+  MarkdownEditor,
+  useMarkdownEditor,
+} from '@react-libraries/markdown-editor';
 import { Button, Switch, TextField } from '@mui/material';
 import { DateTimePicker } from '@mui/lab';
 import Box from '@mui/material/Box';
 import { Content, ContentBody } from '@/types/Content';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { firestorage, useFireUpload } from '@/libs/firebase';
+import { v4 as uuidv4 } from 'uuid';
+import { useLoading } from '@/hooks/useLoading';
 
 export interface Props {
-  // onUpdate: (content: EndPoints['get']['contents']) => void;
-  // content: EndPoints['get']['contents'] | undefined;
-  // srcContent: EndPoints['get']['contents'] | undefined;
   content: Content;
   contentBody: ContentBody;
   onUpdate: () => void;
@@ -31,7 +36,8 @@ export type Action = { readonly type: 'reset'; payload: string };
 export const EditWindow: FC<Props> = memo(
   ({ content, contentBody, onUpdate, onClose, onSave, onReset, onDelete }) => {
     const event = useMarkdownEditor();
-
+    const { state: uploadState, dispatch: upload } = useFireUpload();
+    useLoading([uploadState]);
     return (
       <VirtualWindow
         title="編集"
@@ -92,6 +98,51 @@ export const EditWindow: FC<Props> = memo(
               onUpdate();
             }}
             event={event}
+            onDragOver={(e) => {
+              console.log('drag');
+              e.dataTransfer.dropEffect = 'move';
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            onPaste={() => {
+              navigator.clipboard.read().then((items) => {
+                items.forEach(async (item) => {
+                  const v = await item.getType('image/png');
+                  if (v) {
+                    upload(
+                      firestorage,
+                      `images/${content.id}/${uuidv4()}.png`,
+                      await v.arrayBuffer(),
+                      {
+                        contentType: 'image/png',
+                        cacheControl: 'public, max-age=31536000, immutable',
+                      }
+                    ).then((url) => {
+                      url &&
+                        dispatchMarkdown(event, {
+                          type: 'update',
+                          payload: { value: `![](${url})\n` },
+                        });
+                    });
+                  }
+                });
+              });
+            }}
+            onDrop={(e) => {
+              const length = e.dataTransfer.files.length;
+              if (length) {
+                e.stopPropagation();
+                e.preventDefault();
+                for (let i = 0; i < length; i++) {
+                  const item = e.dataTransfer.files[i];
+                  const storageRef = ref(firestorage, item.name);
+                  uploadBytes(storageRef, item).then((result) => {
+                    getDownloadURL(storageRef).then((v) => console.log(v));
+                    console.log(result);
+                  });
+                }
+              }
+            }}
           />
         </div>
       </VirtualWindow>

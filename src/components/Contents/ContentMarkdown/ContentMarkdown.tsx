@@ -1,9 +1,10 @@
-import React, { FC } from 'react';
+import React, { ElementType, FC, ReactNode } from 'react';
 import styled from './ContentMarkdown.module.scss';
 import ReactMarkdown from 'react-markdown';
 import { PrismAsync } from 'react-syntax-highlighter';
 import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import type mdast from 'mdast';
+import type hast from 'hast';
 import { VNode } from '@/hooks/useMarkdown';
 interface Props {
   children?: string;
@@ -17,15 +18,28 @@ interface Props {
 export const ContentMarkdown: FC<Props> = ({ children }) => {
   const plugin = () => {
     return (node: mdast.Root) => {
+      let index = 0;
       const children = node.children as VNode[];
       for (const v of children) {
         if (v.type === 'heading') {
           v.depth += 1;
+          v.data = { id: String(index++) };
         }
       }
     };
   };
+  let index = 0;
+  const headerProp = ({ node, children }: { node: hast.Element; children: ReactNode }) => {
+    const Tag: ElementType = node.tagName as 'h1';
+    return <Tag id={`header-${index++}`}>{children}</Tag>;
+  };
   const components: Parameters<typeof ReactMarkdown>[0]['components'] = {
+    h1: headerProp,
+    h2: headerProp,
+    h3: headerProp,
+    h4: headerProp,
+    h5: headerProp,
+    h6: headerProp,
     code({ node, inline, className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (

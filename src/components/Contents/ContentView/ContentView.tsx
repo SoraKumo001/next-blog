@@ -18,10 +18,10 @@ export const ContentView: FC<Props> = ({ content, contentBody }) => {
   return (
     <div className={styled.root}>
       <Title>{content.title}</Title>
-      <h1 className={styled.title}>{content.title}</h1>
       <div className={styled.split}>
-        <ContentTable value={contentBody.body} />
+        <ContentTable title={content.title} value={contentBody.body} />
         <div className={styled.contents}>
+          <h1 className={styled.title}>{content.title}</h1>
           {contentBody && <ContentMarkdown>{contentBody?.body}</ContentMarkdown>}
         </div>
       </div>

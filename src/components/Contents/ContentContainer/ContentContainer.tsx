@@ -5,9 +5,8 @@ import { firestore, useFireDoc } from '@/libs/firebase';
 import { Content, ContentBody } from '@/types/Content';
 import { ContentView } from '../ContentView';
 import IconEdit from '@mui/icons-material/EditOutlined';
-import Link from 'next/link';
-import { Title } from '@/components/Commons/Title';
 import { useAdmin } from '@/hooks/useAdmin';
+import { useRouter } from 'next/router';
 interface Props {
   id?: string;
 }
@@ -18,19 +17,21 @@ interface Props {
  * @param {Props} { }
  */
 export const ContentContainer: FC<Props> = ({ id }) => {
+  const router = useRouter();
   const isAdmin = useAdmin();
   const { state: stateContent, contents: content } = useFireDoc(firestore, Content, id);
   const { state: stateBody, contents: contentBody } = useFireDoc(firestore, ContentBody, id);
   useLoading([stateContent, stateBody]);
   if (!content || !contentBody) return null;
+  const handleClick = () => {
+    router.replace(`/contents/${id}/edit`);
+  };
   return (
     <div className={styled.root}>
       {isAdmin && (
-        <Link href={`/contents/${id}/edit`}>
-          <a className={styled.edit}>
-            <IconEdit />
-          </a>
-        </Link>
+        <div className={styled.edit} onClick={handleClick}>
+          <IconEdit />
+        </div>
       )}
       <ContentView content={content} contentBody={contentBody} />
     </div>

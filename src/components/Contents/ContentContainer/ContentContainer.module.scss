@@ -1,11 +1,9 @@
 .root {
   position: relative;
-  padding: 16px;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
   .edit {
+    z-index: 3;
     cursor: pointer;
+    margin: 16px;
     right: 16px;
     display: flex;
     justify-content: center;

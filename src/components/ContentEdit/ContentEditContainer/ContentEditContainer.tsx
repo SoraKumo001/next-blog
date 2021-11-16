@@ -1,4 +1,4 @@
-import React, { FC, useMemo, useState } from 'react';
+import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useLoading } from '@/hooks/useLoading';
 import { EditWindow } from '../EditWindow';
 
@@ -45,11 +45,18 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
     if (stateBody !== 'finished') return undefined;
     if (srcBody) return newClass(ContentBody, srcBody);
     return newClass(ContentBody, { id });
-  }, [srcBody, stateBody, reset]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [srcBody, stateBody, reset, id]);
   const content = useMemo(() => {
     if (stateContent !== 'finished') return undefined;
     return srcContent && newClass(Content, srcContent);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcContent, stateContent, reset]);
+  useEffect(() => {
+    if (stateDelete === 'finished') {
+      router.replace('/');
+    }
+  }, [router, stateDelete]);
   if (!content || !contentBody) return null;
 
   return (
@@ -60,16 +67,14 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
           content={content}
           contentBody={contentBody}
           onSave={handleSave}
-          onClose={() => router.push(`/contents/${id}`)}
+          onClose={() => router.replace(`/contents/${id}`)}
           onUpdate={() => {
             setUpdate((v) => !v);
           }}
           onReset={() => {
             setReset((v) => !v);
           }}
-          onDelete={() => {
-            handleDelete();
-          }}
+          onDelete={handleDelete}
         />
       </div>
     </div>

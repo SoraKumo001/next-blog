@@ -7,6 +7,7 @@ import { ContentView } from '../ContentView';
 import IconEdit from '@mui/icons-material/EditOutlined';
 import { useAdmin } from '@/hooks/useAdmin';
 import { useRouter } from 'next/router';
+import { useMarkdownValues } from '@/hooks/useMarkdown';
 interface Props {
   id?: string;
 }
@@ -22,10 +23,12 @@ export const ContentContainer: FC<Props> = ({ id }) => {
   const { state: stateContent, contents: content } = useFireDoc(firestore, Content, id);
   const { state: stateBody, contents: contentBody } = useFireDoc(firestore, ContentBody, id);
   useLoading([stateContent, stateBody]);
+  const { titles } = useMarkdownValues(contentBody?.body);
   if (!content || !contentBody) return null;
   const handleClick = () => {
     router.replace(`/contents/${id}/edit`);
   };
+
   return (
     <div className={styled.root}>
       {isAdmin && (
@@ -33,7 +36,7 @@ export const ContentContainer: FC<Props> = ({ id }) => {
           <IconEdit />
         </div>
       )}
-      <ContentView content={content} contentBody={contentBody} />
+      <ContentView titles={titles} content={content} contentBody={contentBody} />
     </div>
   );
 };

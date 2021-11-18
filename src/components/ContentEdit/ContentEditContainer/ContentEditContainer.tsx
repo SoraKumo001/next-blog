@@ -2,12 +2,23 @@ import React, { FC, useEffect, useMemo, useState } from 'react';
 import { useLoading } from '@/hooks/useLoading';
 import { EditWindow } from '../EditWindow';
 
-import { deleteDoc, firestore, newClass, saveDoc, useFireDoc } from '@/libs/firebase';
+import {
+  deleteDoc,
+  deleteFile,
+  deleteFiles,
+  firestorage,
+  firestore,
+  getFileList,
+  newClass,
+  saveDoc,
+  useFireDoc,
+} from '@/libs/firebase';
 import { Content, ContentBody } from '@/types/Content';
 import { ContentView } from '../../Contents/ContentView';
 import styled from './ContentEditContainer.module.scss';
 import { useRouter } from 'next/router';
 import { useNotification } from '@/hooks/useNotification';
+import { useMarkdownValues } from '@/hooks/useMarkdown';
 
 interface Props {
   id?: string;
@@ -28,13 +39,36 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
   const [stateDelete, setStateDelete] = useState<string>('idle');
   const handleSave = () => {
     setStateSave('progress');
-    Promise.all([saveDoc(firestore, content), saveDoc(firestore, contentBody)]).then(() => {
+
+    const vacumeImages = async () => {
+      const markerImages = images
+        .map((image) => {
+          const v = decodeURIComponent(image).match(
+            /https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/.+\.appspot\.com\/o\/images\/(.+)\/(.+)\?/
+          );
+          return v && v[1] === id && v[2];
+        })
+        .filter((v) => v);
+      const list = await getFileList(firestorage, `images/${id}`).then((list) =>
+        list.filter((name) => !markerImages.includes(name))
+      );
+      return list.map((name) => deleteFile(firestorage, `images/${id}/${name}`));
+    };
+    Promise.all([
+      saveDoc(firestore, content),
+      saveDoc(firestore, contentBody),
+      vacumeImages(),
+    ]).then(() => {
       setStateSave('finished');
     });
   };
   const handleDelete = () => {
     setStateDelete('progress');
-    Promise.all([deleteDoc(firestore, content), deleteDoc(firestore, contentBody)]).then(() => {
+    Promise.all([
+      deleteDoc(firestore, content),
+      deleteDoc(firestore, contentBody),
+      deleteFiles(firestorage, `images/${id}`),
+    ]).then(() => {
       setStateDelete('finished');
     });
   };
@@ -44,7 +78,7 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
   const contentBody = useMemo(() => {
     if (stateBody !== 'finished') return undefined;
     if (srcBody) return newClass(ContentBody, srcBody);
-    return newClass(ContentBody, { id });
+    return newClass(ContentBody, { id, body: "" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcBody, stateBody, reset, id]);
   const content = useMemo(() => {
@@ -57,11 +91,12 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
       router.replace('/');
     }
   }, [router, stateDelete]);
+  const { titles, images } = useMarkdownValues(contentBody?.body);
   if (!content || !contentBody) return null;
 
   return (
     <div className={styled.root}>
-      <ContentView content={content} contentBody={contentBody} />
+      <ContentView titles={titles} content={content} contentBody={contentBody} />
       <div className={styled.edit}>
         <EditWindow
           content={content}

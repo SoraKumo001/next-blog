@@ -23,7 +23,7 @@ import {
   getDoc,
   doc,
 } from 'firebase/firestore';
-import { useSSR } from '@/libs/useSSR';
+import { useSSR } from '@react-libraries/use-ssr';
 import {
   convertFirebaseEntity,
   FirebaseConverter,

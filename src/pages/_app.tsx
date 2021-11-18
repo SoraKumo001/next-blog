@@ -1,7 +1,7 @@
 import { LoadingContainer } from '@/components/System/LoadingContainer';
 import { NotificationContainer } from '@/components/System/Notification/NotificationContainer';
 import { SystemContext } from '@/libs/SystemContext';
-import { CachesType, createCache, getDataFromTree } from '@/libs/useSSR';
+import { CachesType, createCache, getDataFromTree } from '@react-libraries/use-ssr';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import { AppContext, AppProps } from 'next/app';
 import React from 'react';

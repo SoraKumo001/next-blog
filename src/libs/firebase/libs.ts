@@ -1,3 +1,4 @@
+import { deleteObject, FirebaseStorage, list, ref } from '@firebase/storage';
 import {
   addDoc,
   collection,
@@ -9,6 +10,7 @@ import {
   serverTimestamp,
   setDoc,
 } from 'firebase/firestore';
+import { listAll } from 'firebase/storage';
 
 export const saveDoc = async <T extends Object & { [key in keyof T]: T[key] }>(
   db: Firestore,
@@ -215,4 +217,21 @@ export const FirebaseConverter: FirestoreDataConverter<Object> = {
     values.id = snapshot.id;
     return Object.assign(new entity(), values);
   },
+};
+
+export const getFileList = async (storage: FirebaseStorage, path: string) => {
+  const result = await listAll(ref(storage, path));
+  return result.items.map((r) => r.name);
+};
+
+export const deleteFile = (storage: FirebaseStorage, path: string) => {
+  return deleteObject(ref(storage, path));
+};
+
+export const deleteFiles = async (storage: FirebaseStorage, path: string) => {
+  const result = await listAll(ref(storage, path));
+  return await Promise.all([
+    ...result.items.map((item) => deleteObject(ref(storage, item.fullPath))),
+  ]);
+  // return deleteObject(ref(storage, path));
 };

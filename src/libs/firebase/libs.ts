@@ -4,13 +4,22 @@ import {
   collection,
   deleteDoc as delDoc,
   doc,
+  endAt,
   FieldValue,
   Firestore,
   FirestoreDataConverter,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  QueryConstraint,
   serverTimestamp,
   setDoc,
+  startAfter,
+  startAt,
+  where,
 } from 'firebase/firestore';
-import { listAll } from 'firebase/storage';
+import { getDownloadURL, listAll, uploadBytes, UploadMetadata } from 'firebase/storage';
 
 export const saveDoc = async <T extends Object & { [key in keyof T]: T[key] }>(
   db: Firestore,
@@ -174,7 +183,9 @@ export const newClass = <
 
 export const FirebaseConverter: FirestoreDataConverter<Object> = {
   toFirestore: (entity) => {
-    const properties = Object.getPrototypeOf(entity) as FirestoreDecoratorType;
+    const properties = Object.getPrototypeOf(
+      Object.getPrototypeOf(entity)
+    ) as FirestoreDecoratorType;
     const { __collection, __types } = properties;
     if (!__collection || !__types) return entity;
     const idName = Object.entries(__types).find(
@@ -233,5 +244,60 @@ export const deleteFiles = async (storage: FirebaseStorage, path: string) => {
   return await Promise.all([
     ...result.items.map((item) => deleteObject(ref(storage, item.fullPath))),
   ]);
-  // return deleteObject(ref(storage, path));
 };
+export const saveFile = async (storage: FirebaseStorage,
+  path: string,
+  data: Blob | Uint8Array | ArrayBuffer,
+  metadata?: UploadMetadata) => {
+  const storageRef = ref(storage, path);
+  return uploadBytes(storageRef, data, metadata)
+    .then(async () => await getDownloadURL(storageRef).catch(() => undefined))
+}
+
+
+export const getFireDocs = async <
+  T extends { new(...args: any[]): {} },
+  R extends T extends { new(...args: any[]): infer R } ? R : never
+>(
+  db: Firestore,
+  entity: T,
+  options?: {
+    where?: Parameters<typeof where> | Parameters<typeof where>[];
+    limit?: number;
+    order?: Parameters<typeof orderBy> | Parameters<typeof orderBy>[];
+    start?: number;
+    startAfter?: number;
+    end?: number;
+    entities?: Object[];
+  }
+) => {
+  const properties = entity.prototype as FirestoreDecoratorType;
+  const path = properties.__collection!;
+  const { where: _where, limit: _limit, order, start, startAfter: _startAfter, end } = options || {};
+
+  const constrains: QueryConstraint[] = [];
+  if (_where) {
+    if (typeof _where[0] === 'string')
+      constrains.push(where(...(_where as Parameters<typeof where>)));
+    else
+      (_where as Parameters<typeof where>[]).forEach((o) => {
+        constrains.push(where(...o));
+      });
+  }
+  if (_limit !== undefined) constrains.push(limit(_limit));
+  if (start !== undefined) constrains.push(startAt(start));
+  if (_startAfter !== undefined) constrains.push(startAfter(_startAfter));
+  if (end !== undefined) constrains.push(endAt(end));
+  if (order) {
+    if (typeof order[0] === 'string')
+      constrains.push(orderBy(...(order as Parameters<typeof orderBy>)));
+    else
+      (order as Parameters<typeof orderBy>[]).forEach((o) => {
+        constrains.push(orderBy(...o));
+      });
+  }
+  const c = collection(db, path);
+  const docQuery = query(c, ...constrains).withConverter(FirebaseConverter);
+  const result = await getDocs(docQuery)
+  return result.docs.map((v) => v.data()) as R[]
+}

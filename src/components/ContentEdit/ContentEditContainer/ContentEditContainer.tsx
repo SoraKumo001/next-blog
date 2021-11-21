@@ -12,6 +12,7 @@ import {
   newClass,
   saveDoc,
   useFireDoc,
+  useFireUpload,
 } from '@/libs/firebase';
 import { Content, ContentBody } from '@/types/Content';
 import { ContentView } from '../../Contents/ContentView';
@@ -19,10 +20,15 @@ import styled from './ContentEditContainer.module.scss';
 import { useRouter } from 'next/router';
 import { useNotification } from '@/hooks/useNotification';
 import { useMarkdownValues } from '@/hooks/useMarkdown';
-
+import { dispatchMarkdown, useMarkdownEditor } from '@react-libraries/markdown-editor';
+import { v4 as uuidv4 } from 'uuid';
+import { convertWebp, getImageSize } from '@/libs/webp';
+import { Application } from '@/types/Application';
 interface Props {
   id?: string;
 }
+
+const ContentsImagePath = 'Contents';
 
 /**
  * ContentEditContainer
@@ -35,24 +41,27 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
   const [reset, setReset] = useState(false);
   const { state: stateContent, contents: srcContent } = useFireDoc(firestore, Content, id);
   const { state: stateBody, contents: srcBody } = useFireDoc(firestore, ContentBody, id);
+  const { contents: settings } = useFireDoc(firestore, Application, 'root');
   const [stateSave, setStateSave] = useState<string>('idle');
   const [stateDelete, setStateDelete] = useState<string>('idle');
+
   const handleSave = () => {
     setStateSave('progress');
 
     const vacumeImages = async () => {
+      const reg = new RegExp(
+        `https://firebasestorage\.googleapis\.com/v0/b/${process.env.NEXT_PUBLIC_storageBucket}/o/${ContentsImagePath}/(.+)/(.+)\\?`
+      );
       const markerImages = images
         .map((image) => {
-          const v = decodeURIComponent(image).match(
-            /https:\/\/firebasestorage\.googleapis\.com\/v0\/b\/.+\.appspot\.com\/o\/images\/(.+)\/(.+)\?/
-          );
+          const v = decodeURIComponent(image).match(reg);
           return v && v[1] === id && v[2];
         })
         .filter((v) => v);
-      const list = await getFileList(firestorage, `images/${id}`).then((list) =>
+      const list = await getFileList(firestorage, `${ContentsImagePath}/${id}`).then((list) =>
         list.filter((name) => !markerImages.includes(name))
       );
-      return list.map((name) => deleteFile(firestorage, `images/${id}/${name}`));
+      return list.map((name) => deleteFile(firestorage, `${ContentsImagePath}/${id}/${name}`));
     };
     Promise.all([
       saveDoc(firestore, content),
@@ -67,18 +76,15 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
     Promise.all([
       deleteDoc(firestore, content),
       deleteDoc(firestore, contentBody),
-      deleteFiles(firestorage, `images/${id}`),
+      deleteFiles(firestorage, `${ContentsImagePath}/${id}`),
     ]).then(() => {
       setStateDelete('finished');
     });
   };
-  useNotification(stateSave, { progress: '保存しています', finished: '保存しました' });
-  useNotification(stateDelete, { progress: '削除しています', finished: '削除しました' });
-  useLoading([stateContent, stateBody]);
   const contentBody = useMemo(() => {
     if (stateBody !== 'finished') return undefined;
     if (srcBody) return newClass(ContentBody, srcBody);
-    return newClass(ContentBody, { id, body: "" });
+    return newClass(ContentBody, { id, body: '' });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [srcBody, stateBody, reset, id]);
   const content = useMemo(() => {
@@ -92,13 +98,43 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
     }
   }, [router, stateDelete]);
   const { titles, images } = useMarkdownValues(contentBody?.body);
-  if (!content || !contentBody) return null;
+  const event = useMarkdownEditor();
+  const { state: uploadState, dispatch } = useFireUpload();
+  const handleUpload = async (src: Blob) => {
+    const value = await convertWebp(src);
+    const size = await getImageSize(value);
+    dispatch(
+      firestorage,
+      `${ContentsImagePath}/${id}/${uuidv4()}.${value.type.split('/').pop() || ''}`,
+      value,
+      {
+        contentType: value.type,
+        cacheControl: 'public, max-age=31536000, immutable',
+      }
+    ).then((url) => {
+      url &&
+        dispatchMarkdown(event, {
+          type: 'update',
+          payload: { value: `![{"width":"${size.width}px","height":"${size.height}"}](${url})\n` },
+        });
+    });
+  };
+  useNotification(stateSave, { finished: '保存しました' });
+  useNotification(stateDelete, { finished: '削除しました' });
+  useLoading([stateContent, stateBody, stateSave, stateDelete, uploadState]);
+  if (!content || !contentBody || !settings) return null;
 
   return (
     <div className={styled.root}>
-      <ContentView titles={titles} content={content} contentBody={contentBody} />
+      <ContentView
+        titles={titles}
+        content={content}
+        contentBody={contentBody}
+        directStorage={settings.directStorage}
+      />
       <div className={styled.edit}>
         <EditWindow
+          event={event}
           content={content}
           contentBody={contentBody}
           onSave={handleSave}
@@ -110,6 +146,7 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
             setReset((v) => !v);
           }}
           onDelete={handleDelete}
+          onUpload={handleUpload}
         />
       </div>
     </div>

@@ -39,6 +39,7 @@ import {
   UploadMetadata,
 } from 'firebase/storage';
 import { dispatchMarkdown } from '@react-libraries/markdown-editor';
+import { saveDoc } from '.';
 
 type StatType = 'idle' | 'progress' | 'finished' | 'error';
 type LoginType = 'idle' | 'logined' | 'logouted' | 'error';
@@ -315,3 +316,20 @@ export const useFireUpload = () => {
   );
   return { state, dispatch };
 };
+
+export const useFireSave = () => {
+  const [state, setState] = useState<StatType>('idle');
+  const dispatch = useCallback((store: Firestore, entity: Object) => {
+    setState('progress');
+    saveDoc(store, entity)
+      .then(() => {
+        setState('finished');
+      })
+      .catch(() => {
+        setState('error');
+      });
+  }, []);
+  return { state, dispatch };
+};
+
+

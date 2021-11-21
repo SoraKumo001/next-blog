@@ -1,5 +1,8 @@
+import { firestore, useFireDoc } from '@/libs/firebase';
+import { Application } from '@/types/Application';
 import Link from 'next/link';
-import React, { FC } from 'react';
+import React, { VFC } from 'react';
+import IconApp from '@mui/icons-material/BookOnlineOutlined';
 import styled from './HeaderContainer.module.scss';
 
 interface Props {}
@@ -9,11 +12,15 @@ interface Props {}
  *
  * @param {Props} { }
  */
-export const HeaderContainer: FC<Props> = ({}) => {
+export const HeaderContainer: VFC<Props> = () => {
+  const { contents } = useFireDoc(firestore, Application, 'root');
   return (
     <div className={styled.root}>
       <Link href="/">
-        <a className={styled.title}>空雲リファレンス2</a>
+        <a className={styled.title}>
+          <IconApp />
+          {contents?.title}
+        </a>
       </Link>
     </div>
   );

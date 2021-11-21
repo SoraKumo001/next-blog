@@ -9,6 +9,7 @@ interface Props {
   titles?: MarkdownTitles;
   content: Content;
   contentBody: ContentBody;
+  directStorage: boolean;
 }
 
 /**
@@ -16,7 +17,7 @@ interface Props {
  *
  * @param {Props} { }
  */
-export const ContentView: FC<Props> = ({ titles, content, contentBody }) => {
+export const ContentView: FC<Props> = ({ titles, content, contentBody, directStorage }) => {
   return (
     <div className={styled.root}>
       <Title>{content.title}</Title>
@@ -24,7 +25,9 @@ export const ContentView: FC<Props> = ({ titles, content, contentBody }) => {
         <ContentTable title={content.title} titles={titles} />
         <div className={styled.contents}>
           <h1 className={styled.title}>{content.title}</h1>
-          {contentBody && <ContentMarkdown>{contentBody?.body}</ContentMarkdown>}
+          {contentBody && (
+            <ContentMarkdown directStorage={directStorage}>{contentBody?.body}</ContentMarkdown>
+          )}
         </div>
       </div>
     </div>

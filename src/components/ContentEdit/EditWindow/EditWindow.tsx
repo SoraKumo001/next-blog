@@ -1,20 +1,14 @@
 import React, { FC, memo } from 'react';
 import styled from './EditWindow.module.scss';
 import { VirtualWindow } from '@react-libraries/virtual-window';
-import {
-  dispatchMarkdown,
-  MarkdownEditor,
-  useMarkdownEditor,
-} from '@react-libraries/markdown-editor';
+import { MarkdownEditor, MarkdownEvent } from '@react-libraries/markdown-editor';
 import { Button, Switch, TextField } from '@mui/material';
 import { DateTimePicker } from '@mui/lab';
 import Box from '@mui/material/Box';
 import { Content, ContentBody } from '@/types/Content';
-import { firestorage, useFireUpload } from '@/libs/firebase';
-import { v4 as uuidv4 } from 'uuid';
-import { useLoading } from '@/hooks/useLoading';
 
 export interface Props {
+  event: MarkdownEvent;
   content: Content;
   contentBody: ContentBody;
   onUpdate: () => void;
@@ -22,6 +16,7 @@ export interface Props {
   onDelete: () => void;
   onClose: () => void;
   onReset: () => void;
+  onUpload: (blob: Blob) => void;
 }
 
 export type Action = { readonly type: 'reset'; payload: string };
@@ -33,22 +28,7 @@ export type Action = { readonly type: 'reset'; payload: string };
  */
 // eslint-disable-next-line react/display-name
 export const EditWindow: FC<Props> = memo(
-  ({ content, contentBody, onUpdate, onClose, onSave, onReset, onDelete }) => {
-    const event = useMarkdownEditor();
-    const { state: uploadState, dispatch } = useFireUpload();
-    const upload = async (value: Blob) => {
-      dispatch(firestorage, `images/${content.id}/${uuidv4()}.png`, value, {
-        contentType: 'image/png',
-        cacheControl: 'public, max-age=31536000, immutable',
-      }).then((url) => {
-        url &&
-          dispatchMarkdown(event, {
-            type: 'update',
-            payload: { value: `![](${url})\n` },
-          });
-      });
-    };
-    useLoading([uploadState]);
+  ({ content, contentBody, event, onUpdate, onClose, onSave, onReset, onDelete, onUpload }) => {
     return (
       <VirtualWindow
         title="編集"
@@ -117,7 +97,7 @@ export const EditWindow: FC<Props> = memo(
             onPaste={() => {
               navigator.clipboard.read().then((items) => {
                 items.forEach(async (item) => {
-                  upload(await item.getType('image/png'));
+                  onUpload(await item.getType('image/png'));
                 });
               });
             }}
@@ -127,7 +107,7 @@ export const EditWindow: FC<Props> = memo(
                 e.stopPropagation();
                 e.preventDefault();
                 for (let i = 0; i < length; i++) {
-                  upload(e.dataTransfer.files[i]);
+                  onUpload(e.dataTransfer.files[i]);
                 }
               }
             }}

@@ -1,6 +1,6 @@
 import { FirestoraDoc, FirestoreProperty } from '../libs/firebase/libs';
 
-@FirestoraDoc('admins')
+@FirestoraDoc('Admins')
 export class Admin {
   @FirestoreProperty('id')
   id?: string;

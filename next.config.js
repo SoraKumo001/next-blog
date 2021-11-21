@@ -11,7 +11,8 @@ const config = {
       config.externals = [...config.externals,
         {"firebase/app":true},
         {"firebase/auth":true},
-        {"firebase/firestore":true}]
+        {"firebase/firestore":true},
+        {"@jsquash/webp": true }]
     }
     return config
   },

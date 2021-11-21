@@ -1,0 +1,43 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 24px;
+  overflow: hidden;
+  .title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 16px;
+  }
+  .form {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #dddddd;
+    border-radius: 8px;
+    padding: 16px;
+    min-width: 400px;
+    > * {
+      margin: 8px 0;
+    }
+    .buttons {
+      text-align: center;
+      > * {
+        margin: 0 16px;
+      }
+    }
+    .line {
+      display: flex;
+      align-items: center;
+      a {
+        flex: 1;
+        border: 1px solid #aaaaff;
+        border-radius: 4px;
+        padding: 4px;
+      }
+    }
+    .image {
+      padding: 8px;
+    }
+  }
+}

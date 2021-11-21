@@ -23,7 +23,7 @@ export const LoginContainer: FC<Props> = ({}) => {
   }, []);
   useEffect(() => {
     if (state === 'finished' || state === 'error') router.back();
-  }, [state]);
+  }, [router, state]);
   useLoading([state]);
   return null;
 };

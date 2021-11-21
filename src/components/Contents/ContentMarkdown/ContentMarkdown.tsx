@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React, { ElementType, FC, ReactNode } from 'react';
 import styled from './ContentMarkdown.module.scss';
 import ReactMarkdown from 'react-markdown';
@@ -7,6 +8,7 @@ import type mdast from 'mdast';
 import type hast from 'hast';
 import { VNode } from '@/hooks/useMarkdown';
 interface Props {
+  directStorage: boolean;
   children?: string;
 }
 
@@ -15,7 +17,7 @@ interface Props {
  *
  * @param {Props} { }
  */
-export const ContentMarkdown: FC<Props> = ({ children }) => {
+export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
   const plugin = () => {
     return (node: mdast.Root) => {
       let index = 0;
@@ -40,6 +42,14 @@ export const ContentMarkdown: FC<Props> = ({ children }) => {
     h4: headerProp,
     h5: headerProp,
     h6: headerProp,
+    img({ src, alt }) {
+      try {
+        const styleString = alt?.match(/^{.*}$/);
+        const style = styleString ? JSON.parse(alt!) : undefined;
+        return <img src={src} style={style} alt="" />;
+      } catch {}
+      return <img src={src} alt="" />;
+    },
     code({ node, inline, className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
@@ -56,8 +66,19 @@ export const ContentMarkdown: FC<Props> = ({ children }) => {
     },
   };
   const handleImage = (src: string) => {
-    const m = /https:\/\/drive\.google\.com\/file\/d\/(.*)\//.exec(src);
-    return m ? `https://drive.google.com/uc?export=download&id=${m[1]}` : src;
+    //const m = /https:\/\/drive\.google\.com\/file\/d\/(.*)\//.exec(src);
+    // if(m){
+    //   return `https://drive.google.com/uc?export=download&id=${m[1]}`
+    // }
+    if (directStorage) {
+      const m = new RegExp(
+        `https://firebasestorage\.googleapis\.com/v0/b/${process.env.NEXT_PUBLIC_storageBucket}/o/(.+)\\?`
+      ).exec(src);
+      if (m) {
+        return `https://storage.googleapis.com/${process.env.NEXT_PUBLIC_storageBucket}/${m[1]}`;
+      }
+    }
+    return src;
   };
   return (
     <ReactMarkdown

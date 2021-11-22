@@ -7,6 +7,7 @@ import { prism } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import type mdast from 'mdast';
 import type hast from 'hast';
 import { VNode } from '@/hooks/useMarkdown';
+import { LinkTarget } from '@/components/Commons/LinkTarget';
 interface Props {
   directStorage: boolean;
   children?: string;
@@ -33,7 +34,7 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
   let index = 0;
   const headerProp = ({ node, children }: { node: hast.Element; children: ReactNode }) => {
     const Tag: ElementType = node.tagName as 'h1';
-    return <Tag id={`header-${index++}`}>{children}</Tag>;
+    return <><LinkTarget id={`header-${index++}`} /><Tag>{children}</Tag></>;
   };
   const components: Parameters<typeof ReactMarkdown>[0]['components'] = {
     h1: headerProp,
@@ -47,7 +48,7 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
         const styleString = alt?.match(/^{.*}$/);
         const style = styleString ? JSON.parse(alt!) : undefined;
         return <img src={src} style={style} alt="" />;
-      } catch {}
+      } catch { }
       return <img src={src} alt="" />;
     },
     code({ node, inline, className, children, ...props }) {

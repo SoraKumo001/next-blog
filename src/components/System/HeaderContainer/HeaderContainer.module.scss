@@ -1,26 +1,26 @@
 .root {
-  position: sticky;
-  top: 0px;
-  display: flex;
-  align-items: center;
-  padding: 16px 0;
-  background: lightsteelblue;
-  white-space: nowrap;
-  z-index: 2;
-  .title {
-    display: flex;
-    align-items: center;
-    margin-left: 32px;
-    max-width: 80%;
-    font-size: 24px;
-    font-weight: bold;
-    color: darkblue;
-  }
-  svg {
-    border: 2px solid;
-    height: 16px;
-    padding: 4px;
-    border-radius: 4px;
-    margin-right: 16px;
-  }
+	position: sticky;
+	top: 0px;
+	display: flex;
+	align-items: center;
+	padding: 16px 0;
+	background: lightsteelblue;
+	white-space: nowrap;
+	z-index: 2;
+	.title {
+		display: flex;
+		align-items: center;
+		margin-left: 32px;
+		max-width: 80%;
+		font-size: 24px;
+		font-weight: bold;
+		color: darkblue;
+	}
+	svg {
+		border: 2px solid;
+		height: 16px;
+		padding: 4px;
+		border-radius: 4px;
+		margin-right: 16px;
+	}
 }

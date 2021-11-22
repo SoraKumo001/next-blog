@@ -5,6 +5,7 @@ import { ContentMarkdown } from '../ContentMarkdown';
 import { ContentTable } from '../ContentTable';
 import { Title } from '@/components/Commons/Title';
 import { MarkdownTitles } from '@/hooks/useMarkdown';
+import { LinkTarget } from '@/components/Commons/LinkTarget';
 interface Props {
   titles?: MarkdownTitles;
   content: Content;
@@ -24,7 +25,8 @@ export const ContentView: FC<Props> = ({ titles, content, contentBody, directSto
       <div className={styled.split}>
         <ContentTable title={content.title} titles={titles} />
         <div className={styled.contents}>
-          <h1 className={styled.title}>{content.title}</h1>
+          <LinkTarget id="header-top" />
+          <h1 className={styled.title} >{content.title}</h1>
           {contentBody && (
             <ContentMarkdown directStorage={directStorage}>{contentBody?.body}</ContentMarkdown>
           )}

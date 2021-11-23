@@ -5,8 +5,10 @@ import { useLoading } from '@/hooks/useLoading';
 import { firestore, useFireDocs } from '@/libs/firebase';
 import { Content } from '@/types/Content';
 import { useAdmin } from '@/hooks/useAdmin';
-import { classNames } from '@/libs/classNames';
 import { Title } from '@/components/Commons/Title';
+import { classNames } from '@/libs/classNames';
+import { ContentTopContainer } from '../ContentTopContainer';
+import { where } from '@firebase/firestore';
 interface Props {}
 
 /**
@@ -16,16 +18,18 @@ interface Props {}
  */
 export const ContentListContainer: FC<Props> = ({}) => {
   const isAdmin = useAdmin();
+  const whereSystem = ['system', '==', false] as Parameters<typeof where>;
   const { state, contents } = useFireDocs(firestore, Content, {
     order: ['updatedAt'],
-    where: isAdmin ? undefined : ['visible', '==', true],
+    where: isAdmin ? whereSystem : [whereSystem, ['visible', '==', true]],
   });
   useLoading([state]);
   return (
     <div className={styled.root}>
-      <Title>更新一覧</Title>
-      <div>
-        <div className={styled.title}>更新一覧</div>
+      <Title>記事一覧</Title>
+      <div className={styled.main}>
+        <ContentTopContainer />
+        <div className={styled.title}>記事一覧</div>
         <div className={styled.list}>
           {contents?.map((c) => (
             <Link key={c.id} passHref href={`/contents/${c.id}`}>

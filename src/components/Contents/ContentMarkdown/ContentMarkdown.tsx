@@ -50,6 +50,17 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
     h5: headerProp,
     h6: headerProp,
     a({ href, children }) {
+      if (href?.match(/^https:\/\/codepen.io\//)) {
+        return (
+          <iframe
+            frameBorder="no"
+            loading="lazy"
+            allowFullScreen={true}
+            allowTransparency={true}
+            src={href.replace('/pen/', '/embed/')}
+          />
+        );
+      }
       return (
         <Link href={href!}>
           <a target={href?.match(/https?:/) ? '_blank' : undefined}>{children}</a>

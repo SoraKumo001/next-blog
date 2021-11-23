@@ -1,4 +1,5 @@
 import React, { FC } from 'react';
+import { EditTop } from '../Buttons/EditTop';
 import { Login } from '../Buttons/Login/Login';
 import { NewContents } from '../Buttons/NewContents';
 import { Settings } from '../Buttons/Settings';
@@ -17,6 +18,7 @@ export const FooterButtons: FC<Props> = ({}) => {
       <Login />
       <Settings />
       <NewContents />
+      <EditTop />
     </div>
   );
 };

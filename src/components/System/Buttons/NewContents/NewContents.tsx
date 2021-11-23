@@ -16,7 +16,12 @@ export const NewContents: FC<Props> = ({}) => {
   const isAdmin = useAdmin();
   const router = useRouter();
   const handleClick = () => {
-    const contents = newClass(Content, { title: 'new', visible: false, keywords: [] });
+    const contents = newClass(Content, {
+      title: 'new',
+      visible: false,
+      system: false,
+      keywords: [],
+    });
     saveDoc(firestore, contents).then((id) => {
       router.push(`/contents/${id}/edit`);
     });

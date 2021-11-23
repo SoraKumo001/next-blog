@@ -1,4 +1,5 @@
-import { deleteObject, FirebaseStorage, list, ref } from '@firebase/storage';
+/* eslint-disable no-unused-vars */
+import { deleteObject, FirebaseStorage, ref } from '@firebase/storage';
 import {
   addDoc,
   collection,
@@ -8,6 +9,7 @@ import {
   FieldValue,
   Firestore,
   FirestoreDataConverter,
+  getDoc,
   getDocs,
   limit,
   orderBy,
@@ -309,4 +311,20 @@ export const getFireDocs = async <
   const docQuery = query(c, ...constrains).withConverter(FirebaseConverter);
   const result = await getDocs(docQuery);
   return result.docs.map((v) => v.data()) as R[];
+};
+export const getFireDoc = async <
+  T extends { new (...args: any[]): {} },
+  R extends T extends { new (...args: any[]): infer R } ? R : never
+>(
+  db: Firestore,
+  entity: T,
+  id: string
+) => {
+  const properties = entity.prototype as FirestoreDecoratorType;
+  const path = properties.__collection!;
+  const c = collection(db, path);
+  const docQuery = doc(collection(db, path), id).withConverter(FirebaseConverter);
+  const result = await getDoc(docQuery);
+  if (!result.exists()) return undefined;
+  return result?.data as R;
 };

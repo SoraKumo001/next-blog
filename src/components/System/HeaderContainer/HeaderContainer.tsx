@@ -2,7 +2,7 @@ import { firestore, useFireDoc } from '@/libs/firebase';
 import { Application } from '@/types/Application';
 import Link from 'next/link';
 import React, { VFC } from 'react';
-import IconApp from '@mui/icons-material/BookOnlineOutlined';
+import IconApp from '@mui/icons-material/HomeOutlined';
 import styled from './HeaderContainer.module.scss';
 
 interface Props {}

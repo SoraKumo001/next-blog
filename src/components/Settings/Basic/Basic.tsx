@@ -2,14 +2,7 @@ import { ImageField } from '@/components/Commons/ImageField';
 import { useAction } from '@/hooks/useAction';
 import { useLoading } from '@/hooks/useLoading';
 import { useNotification } from '@/hooks/useNotification';
-import {
-  firestorage,
-  firestore,
-  saveDoc,
-  saveFile,
-  useFireDoc,
-  useFireSave,
-} from '@/libs/firebase';
+import { firestorage, firestore, saveDoc, saveFile, useFireDoc } from '@/libs/firebase';
 import { Application } from '@/types/Application';
 import { Button, Switch, TextField } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -27,7 +20,6 @@ export const Basic: FC<Props> = ({}) => {
   const router = useRouter();
   const { state, contents } = useFireDoc(firestore, Application, 'root');
   const { state: stateUpdate, dispatch } = useAction();
-  //  const { state: stateUpdate, dispatch } = useFireSave();
   const property = useRef<{ image?: Blob | null }>({}).current;
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
     (e) => {

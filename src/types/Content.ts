@@ -8,6 +8,8 @@ export class Content {
   title!: string;
   @FirestoreProperty('boolean')
   visible!: boolean;
+  @FirestoreProperty('boolean')
+  system!: boolean;
   @FirestoreProperty('array')
   keywords!: string[];
   @FirestoreProperty('created')

@@ -2,36 +2,44 @@ import { ImageField } from '@/components/Commons/ImageField';
 import { useAction } from '@/hooks/useAction';
 import { useLoading } from '@/hooks/useLoading';
 import { useNotification } from '@/hooks/useNotification';
-import { firestorage, firestore, saveDoc, saveFile, useFireDoc, useFireSave } from '@/libs/firebase';
+import {
+  firestorage,
+  firestore,
+  saveDoc,
+  saveFile,
+  useFireDoc,
+  useFireSave,
+} from '@/libs/firebase';
 import { Application } from '@/types/Application';
 import { Button, Switch, TextField } from '@mui/material';
 import { useRouter } from 'next/router';
 import React, { FC, useCallback, useRef } from 'react';
 import styled from './Basic.module.scss';
 
-interface Props { }
+interface Props {}
 
 /**
  * Basic
  *
  * @param {Props} { }
  */
-export const Basic: FC<Props> = ({ }) => {
+export const Basic: FC<Props> = ({}) => {
   const router = useRouter();
   const { state, contents } = useFireDoc(firestore, Application, 'root');
-  const { state: stateUpdate, dispatch } = useAction()
+  const { state: stateUpdate, dispatch } = useAction();
   //  const { state: stateUpdate, dispatch } = useFireSave();
   const property = useRef<{ image?: Blob | null }>({}).current;
   const handleSubmit: React.FormEventHandler<HTMLFormElement> = useCallback(
     (e) => {
       e.preventDefault();
       dispatch(async () => {
-        const url = property.image && await saveFile(firestorage, "application/card.webp", property.image, {
-          contentType: "image/webp"
-        })
-        if (property.image !== undefined)
-          contents!.cardUrl = url || undefined
-        await saveDoc(firestore, contents!)
+        const url =
+          property.image &&
+          (await saveFile(firestorage, 'application/card.webp', property.image, {
+            contentType: 'image/webp',
+          }));
+        if (property.image !== undefined) contents!.cardUrl = url || undefined;
+        await saveDoc(firestore, contents!);
       });
     },
     [contents, dispatch, property]
@@ -81,7 +89,11 @@ export const Basic: FC<Props> = ({ }) => {
             (Need read permission for `allUser`)
           </a>
         </div>
-        <ImageField className={styled.image} onChange={(v) => (property.image = v)} src={contents?.cardUrl}>
+        <ImageField
+          className={styled.image}
+          onChange={(v) => (property.image = v)}
+          src={contents?.cardUrl}
+        >
           OGP Image
         </ImageField>
         <div className={styled.buttons}>

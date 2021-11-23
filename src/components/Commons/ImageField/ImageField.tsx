@@ -7,7 +7,7 @@ import { convertWebp } from '@/libs/webp';
 interface Props {
   className?: string;
   onChange?: (value: Blob | null) => void;
-  src?: string
+  src?: string;
 }
 
 /**
@@ -73,10 +73,13 @@ export const ImageField: FC<Props> = ({ className, onChange, children, src }) =>
     >
       {imageData ? (
         <>
-          <span className={styled.clear} onClick={() => {
-            setImageData(undefined)
-            onChange?.(null)
-          }}>
+          <span
+            className={styled.clear}
+            onClick={() => {
+              setImageData(undefined);
+              onChange?.(null);
+            }}
+          >
             ✖
           </span>
           <img src={imageData} />

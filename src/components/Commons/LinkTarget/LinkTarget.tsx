@@ -1,7 +1,9 @@
-import React, { FC } from 'react'
-import styled from './LinkTarget.module.scss'
+import React, { FC } from 'react';
+import styled from './LinkTarget.module.scss';
 
-interface Props { id?: string }
+interface Props {
+  id?: string;
+}
 
 /**
  * LinkTarget
@@ -9,5 +11,5 @@ interface Props { id?: string }
  * @param {Props} { }
  */
 export const LinkTarget: FC<Props> = ({ id }) => {
-  return <div className={styled.root} id={id} />
-}
+  return <div className={styled.root} id={id} />;
+};

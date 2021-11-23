@@ -245,19 +245,21 @@ export const deleteFiles = async (storage: FirebaseStorage, path: string) => {
     ...result.items.map((item) => deleteObject(ref(storage, item.fullPath))),
   ]);
 };
-export const saveFile = async (storage: FirebaseStorage,
+export const saveFile = async (
+  storage: FirebaseStorage,
   path: string,
   data: Blob | Uint8Array | ArrayBuffer,
-  metadata?: UploadMetadata) => {
+  metadata?: UploadMetadata
+) => {
   const storageRef = ref(storage, path);
-  return uploadBytes(storageRef, data, metadata)
-    .then(async () => await getDownloadURL(storageRef).catch(() => undefined))
-}
-
+  return uploadBytes(storageRef, data, metadata).then(
+    async () => await getDownloadURL(storageRef).catch(() => undefined)
+  );
+};
 
 export const getFireDocs = async <
-  T extends { new(...args: any[]): {} },
-  R extends T extends { new(...args: any[]): infer R } ? R : never
+  T extends { new (...args: any[]): {} },
+  R extends T extends { new (...args: any[]): infer R } ? R : never
 >(
   db: Firestore,
   entity: T,
@@ -273,7 +275,14 @@ export const getFireDocs = async <
 ) => {
   const properties = entity.prototype as FirestoreDecoratorType;
   const path = properties.__collection!;
-  const { where: _where, limit: _limit, order, start, startAfter: _startAfter, end } = options || {};
+  const {
+    where: _where,
+    limit: _limit,
+    order,
+    start,
+    startAfter: _startAfter,
+    end,
+  } = options || {};
 
   const constrains: QueryConstraint[] = [];
   if (_where) {
@@ -298,6 +307,6 @@ export const getFireDocs = async <
   }
   const c = collection(db, path);
   const docQuery = query(c, ...constrains).withConverter(FirebaseConverter);
-  const result = await getDocs(docQuery)
-  return result.docs.map((v) => v.data()) as R[]
-}
+  const result = await getDocs(docQuery);
+  return result.docs.map((v) => v.data()) as R[];
+};

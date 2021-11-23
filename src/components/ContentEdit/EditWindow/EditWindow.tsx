@@ -89,6 +89,12 @@ export const EditWindow: FC<Props> = memo(
               onUpdate();
             }}
             event={event}
+            onKeyDown={(e) => {
+              if (e.ctrlKey && e.key === 's') {
+                e.preventDefault();
+                onSave();
+              }
+            }}
             onDragOver={(e) => {
               e.dataTransfer.dropEffect = 'move';
               e.stopPropagation();

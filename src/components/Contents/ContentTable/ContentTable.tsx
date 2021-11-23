@@ -19,12 +19,14 @@ export const ContentTable: FC<Props> = ({ title, titles }) => {
       <div className={styled.box}>
         <div className={styled.title}>目次</div>
         <Link href={`#header-top`}>
-          <a className={styled.item}>･ {title}</a>
+          <a className={styled.item}>
+            <li>{title}</li>
+          </a>
         </Link>
         {titles?.map(({ text, depth }, index) => (
           <Link key={index} href={`#header-${index}`}>
             <a className={styled.item} style={{ marginLeft: 16 * depth + 'px' }}>
-              ･ {text}
+              <li>{text}</li>
             </a>
           </Link>
         ))}

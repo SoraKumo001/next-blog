@@ -1,1 +1,1 @@
-export * from './LinkTarget'
+export * from './LinkTarget';

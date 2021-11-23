@@ -38,7 +38,6 @@ import {
   uploadBytes,
   UploadMetadata,
 } from 'firebase/storage';
-import { dispatchMarkdown } from '@react-libraries/markdown-editor';
 import { saveDoc } from '.';
 
 type StatType = 'idle' | 'progress' | 'finished' | 'error';
@@ -197,7 +196,7 @@ export const useFireDocs = <
   );
   const dispatch = useCallback(() => {
     setState((v) => ['idle', v[1]]);
-  }, []);
+  }, [setState]);
   if (!property.init) {
     property.init = true;
     const [status, contents] = state;
@@ -276,7 +275,7 @@ export const useFireDoc = <
   );
   const dispatch = useCallback(() => {
     setState((v) => ['idle', v[1]]);
-  }, []);
+  }, [setState]);
   if (!property.init) {
     property.init = true;
     const [status, contents] = state;
@@ -331,5 +330,3 @@ export const useFireSave = () => {
   }, []);
   return { state, dispatch };
 };
-
-

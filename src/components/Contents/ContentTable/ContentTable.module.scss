@@ -1,11 +1,14 @@
 .root {
-  padding: 8px;
   margin-bottom: 16px;
   position: sticky;
-  top: 80px;
+  top: 72px;
   .box {
+    box-sizing: border-box;
+    max-height: calc(100vh - 120px);
+    margin: 8px;
+    overflow-y: auto;
     width: 360px;
-    padding: 8px;
+    padding: 16px;
     border-radius: 8px;
     box-shadow: 0 0 8px #dddddd88;
     .title {
@@ -22,6 +25,10 @@
       cursor: pointer;
       &:hover {
         border-bottom: solid 1px gray;
+      }
+      li {
+        margin-left: 1.4em;
+        text-indent: -1.4em;
       }
     }
   }

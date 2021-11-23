@@ -20,13 +20,13 @@ interface Props {
  */
 export const ContentView: FC<Props> = ({ titles, content, contentBody, directStorage }) => {
   return (
-    <div className={styled.root}>
+    <div className={styled.root} key={content.id}>
       <Title>{content.title}</Title>
       <div className={styled.split}>
         <ContentTable title={content.title} titles={titles} />
         <div className={styled.contents}>
           <LinkTarget id="header-top" />
-          <h1 className={styled.title} >{content.title}</h1>
+          <h1 className={styled.title}>{content.title}</h1>
           {contentBody && (
             <ContentMarkdown directStorage={directStorage}>{contentBody?.body}</ContentMarkdown>
           )}

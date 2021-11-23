@@ -8,6 +8,7 @@ import type mdast from 'mdast';
 import type hast from 'hast';
 import { VNode } from '@/hooks/useMarkdown';
 import { LinkTarget } from '@/components/Commons/LinkTarget';
+import Link from 'next/link';
 interface Props {
   directStorage: boolean;
   children?: string;
@@ -34,7 +35,12 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
   let index = 0;
   const headerProp = ({ node, children }: { node: hast.Element; children: ReactNode }) => {
     const Tag: ElementType = node.tagName as 'h1';
-    return <><LinkTarget id={`header-${index++}`} /><Tag>{children}</Tag></>;
+    return (
+      <>
+        <LinkTarget id={`header-${index++}`} />
+        <Tag>{children}</Tag>
+      </>
+    );
   };
   const components: Parameters<typeof ReactMarkdown>[0]['components'] = {
     h1: headerProp,
@@ -43,12 +49,19 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
     h4: headerProp,
     h5: headerProp,
     h6: headerProp,
+    a({ href, children }) {
+      return (
+        <Link href={href!}>
+          <a target={href?.match(/https?:/) ? '_blank' : undefined}>{children}</a>
+        </Link>
+      );
+    },
     img({ src, alt }) {
       try {
         const styleString = alt?.match(/^{.*}$/);
         const style = styleString ? JSON.parse(alt!) : undefined;
         return <img src={src} style={style} alt="" />;
-      } catch { }
+      } catch {}
       return <img src={src} alt="" />;
     },
     code({ node, inline, className, children, ...props }) {
@@ -56,7 +69,7 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
       return !inline && match ? (
         <code className={className}>
           <PrismAsync style={prism} language={match[1]} PreTag="div" {...{ ...props, ref: null }}>
-            {String(children).replace(/\n$/, '')}
+            {String(children).replace(/\n$/, '')}{' '}
           </PrismAsync>
         </code>
       ) : (

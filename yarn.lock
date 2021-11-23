@@ -2274,10 +2274,10 @@
     prop-types "^15.6.1"
     react-lifecycles-compat "^3.0.4"
 
-"@react-libraries/markdown-editor@^1.0.11":
-  version "1.0.11"
-  resolved "https://registry.yarnpkg.com/@react-libraries/markdown-editor/-/markdown-editor-1.0.11.tgz#12e90a6433d6060ca53a49f1cf6f8e85b299bee6"
-  integrity sha512-VHQmYX+XKd90PqSrVtWGDVbDeHeBJkc+4+I7nbIxKcq7jjOQPfLe6ZpwZB++tobDbwCfqW2HxCSe/NQSmgvryQ==
+"@react-libraries/markdown-editor@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.yarnpkg.com/@react-libraries/markdown-editor/-/markdown-editor-1.0.12.tgz#fb39eb2cb6851c1c20e1a8437b34d3a4a9342f6a"
+  integrity sha512-ZqWd/NpUMT3zqsXXfqdLM91j+5cBe+e+xFWNJp4odNme/JgrPve2XXW0oduM9WWAdbU1OIZvgUBcURoVvivcVA==
   dependencies:
     "@react-libraries/use-local-event" "^1.0.2"
     react "*"

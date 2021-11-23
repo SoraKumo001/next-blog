@@ -11,12 +11,14 @@ import { LocalizationProvider } from '@mui/lab';
 import { FooterButtons } from '@/components/System/FooterButtons';
 import Head from 'next/head';
 import { HeaderContainer } from '@/components/System/HeaderContainer';
+import { GoogleAnalytics } from '@/components/Commons/GoogleAnalytics';
 
 const App = (props: AppProps & { cache: CachesType }) => {
   const { Component, cache } = props;
   createCache(cache);
   return (
     <SystemContext.Provider>
+      <GoogleAnalytics />
       <Head>
         <meta charSet="UTF-8" />
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />

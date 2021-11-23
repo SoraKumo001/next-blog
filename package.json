@@ -30,7 +30,7 @@
     "@mui/styled-engine-sc": "^5.1.0",
     "@mui/styles": "^5.1.1",
     "@mui/system": "^5.1.1",
-    "@react-libraries/markdown-editor": "^1.0.11",
+    "@react-libraries/markdown-editor": "^1.0.12",
     "@react-libraries/use-local-event": "^1.0.2",
     "@react-libraries/use-local-state": "^1.0.12",
     "@react-libraries/use-ssr": "^1.0.11",

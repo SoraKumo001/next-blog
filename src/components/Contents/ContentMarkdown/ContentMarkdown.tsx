@@ -70,12 +70,19 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
     img({ src, alt }) {
       try {
         const styleString = alt?.match(/^{.*}$/);
-        const style = styleString ? JSON.parse(alt!) : undefined;
-        return <img src={src} style={style} alt="" />;
+        const style = styleString ? JSON.parse(alt!) : {};
+        return (
+          <img
+            src={src}
+            width={style.width && parseInt(style.width)}
+            height={style.height && parseInt(style.height)}
+            alt=""
+          />
+        );
       } catch {}
       return <img src={src} alt="" />;
     },
-    code({ node, inline, className, children, ...props }) {
+    code({ inline, className, children, ...props }) {
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
         <code className={className}>

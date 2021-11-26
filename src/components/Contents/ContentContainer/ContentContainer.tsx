@@ -29,20 +29,23 @@ export const ContentContainer: FC<Props> = ({ id }) => {
   const handleClick = useCallback(() => {
     router.replace(`/contents/${id}/edit`);
   }, [id, router]);
-  if (!content || !contentBody || !settings) return null;
   return (
     <div className={styled.root}>
-      {isAdmin && (
-        <div className={styled.edit} onClick={handleClick}>
-          <IconEdit />
-        </div>
+      {content && contentBody && settings && (
+        <>
+          {isAdmin && (
+            <div className={styled.edit} onClick={handleClick}>
+              <IconEdit />
+            </div>
+          )}
+          <ContentView
+            titles={titles}
+            content={content}
+            contentBody={contentBody}
+            directStorage={settings?.directStorage}
+          />
+        </>
       )}
-      <ContentView
-        titles={titles}
-        content={content}
-        contentBody={contentBody}
-        directStorage={settings?.directStorage}
-      />
     </div>
   );
 };

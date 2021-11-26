@@ -115,7 +115,9 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
       url &&
         dispatchMarkdown(event, {
           type: 'update',
-          payload: { value: `![{"width":"${size.width}px","height":"${size.height}"}](${url})\n` },
+          payload: {
+            value: `![{"width":"${size.width}px","height":"${size.height}px"}](${url})\n`,
+          },
         });
     });
   };

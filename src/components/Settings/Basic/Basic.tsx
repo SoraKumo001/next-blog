@@ -30,7 +30,8 @@ export const Basic: FC<Props> = ({}) => {
           (await saveFile(firestorage, 'application/card.webp', property.image, {
             contentType: 'image/webp',
           }));
-        if (property.image !== undefined) contents!.cardUrl = url || undefined;
+        if (property.image !== undefined) contents!.cardUrl = url || '';
+        console.log('save');
         await saveDoc(firestore, contents!);
       });
     },

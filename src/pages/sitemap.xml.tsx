@@ -24,7 +24,10 @@ const generateSitemapXml = async (req: IncomingMessage) => {
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
   const values = await getFireDocs(firestore, Content, {
     order: ['updatedAt'],
-    where: ['visible', '==', true],
+    where: [
+      ['system', '==', false],
+      ['visible', '==', true],
+    ],
   });
   values.forEach((v) => {
     xml += `

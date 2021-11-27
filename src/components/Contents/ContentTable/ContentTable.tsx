@@ -15,7 +15,7 @@ interface Props {
  */
 export const ContentTable: FC<Props> = ({ title, titles }) => {
   return (
-    <div className={styled.root}>
+    <nav className={styled.root}>
       <div className={styled.box}>
         <div className={styled.title}>目次</div>
         <Link href={`#header-top`}>
@@ -31,6 +31,6 @@ export const ContentTable: FC<Props> = ({ title, titles }) => {
           </Link>
         ))}
       </div>
-    </div>
+    </nav>
   );
 };

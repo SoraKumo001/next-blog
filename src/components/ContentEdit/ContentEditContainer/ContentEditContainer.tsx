@@ -140,7 +140,7 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
           content={content}
           contentBody={contentBody}
           onSave={handleSave}
-          onClose={() => router.replace(`/contents/${id}`)}
+          onClose={() => router.replace(`/contents/${id}`, undefined, { scroll: false })}
           onUpdate={() => {
             setUpdate((v) => !v);
           }}

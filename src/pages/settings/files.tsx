@@ -1,8 +1,8 @@
-import { Menu } from '@/components/Settings/Menu';
+import { Files } from '@/components/Settings/Files';
 import React from 'react';
 
 const Page = () => {
-  return <Menu />;
+  return <Files />;
 };
 
 export default Page;

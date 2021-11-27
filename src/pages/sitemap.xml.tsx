@@ -24,21 +24,29 @@ const generateSitemapXml = async (req: IncomingMessage) => {
   xml += `<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
   const values = await getFireDocs(firestore, Content, {
     order: ['updatedAt'],
-    where: [
-      ['system', '==', false],
-      ['visible', '==', true],
-    ],
+    where: [['visible', '==', true]],
   });
-  values.forEach((v) => {
-    xml += `
+  values
+    .filter((v) => !v.system)
+    .forEach((v) => {
+      xml += `
       <url>
         <loc>https://${req.headers.host}/contents/${v.id}</loc>
         <lastmod>${v.updatedAt?.toISOString()}</lastmod>
         <changefreq>weekly</changefreq>
       </url>
     `;
-  });
-
+    });
+  const lasttime = values.length && Math.max(...values.map((v) => v.updatedAt?.getTime() || 0));
+  if (lasttime) {
+    xml += `
+      <url>
+        <loc>https://${req.headers.host}/</loc>
+        <lastmod>${new Date(lasttime).toISOString()}</lastmod>
+        <changefreq>daily</changefreq>
+      </url>
+    `;
+  }
   xml += `</urlset>`;
   return xml;
 };

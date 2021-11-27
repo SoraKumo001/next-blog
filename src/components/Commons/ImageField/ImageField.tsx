@@ -8,6 +8,8 @@ interface Props {
   className?: string;
   onChange?: (value: Blob | null) => void;
   src?: string;
+  width?: number;
+  height?: number;
 }
 
 /**
@@ -15,7 +17,7 @@ interface Props {
  *
  * @param {Props} { }
  */
-export const ImageField: FC<Props> = ({ className, onChange, children, src }) => {
+export const ImageField: FC<Props> = ({ className, onChange, children, src, width, height }) => {
   const ref = useRef<HTMLInputElement>(null);
   const [isDrag, setDrag] = useState(false);
   const [imageData, setImageData] = useState<string | undefined>(src);
@@ -82,7 +84,7 @@ export const ImageField: FC<Props> = ({ className, onChange, children, src }) =>
           >
             ✖
           </span>
-          <img src={imageData} />
+          <img src={imageData} width={width} height={height} />
         </>
       ) : (
         <>

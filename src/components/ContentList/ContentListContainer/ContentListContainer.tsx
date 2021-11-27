@@ -33,15 +33,23 @@ export const ContentListContainer: FC<Props> = ({}) => {
         <div className={styled.list}>
           {contents?.map((c) => (
             <Link key={c.id} passHref href={`/contents/${c.id}`}>
-              <div className={classNames(styled.item, c.visible === false && styled.hidden)}>
+              <a className={classNames(styled.item, c.visible === false && styled.hidden)}>
                 <div className={styled.image}>
                   <div>📖</div>
                 </div>
                 <div>
                   <div className={styled.title}>{c.title}</div>
-                  <div>{c.updatedAt?.toLocaleString()}</div>
+                  <div>
+                    {c.updatedAt?.toLocaleString('ja-JP', {
+                      year: 'numeric',
+                      month: '2-digit',
+                      day: '2-digit',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </div>
                 </div>
-              </div>
+              </a>
             </Link>
           ))}
           {contents && contents.length % 2 ? (

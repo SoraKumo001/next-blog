@@ -1,8 +1,8 @@
-import { Menu } from '@/components/Settings/Menu';
+import { Basic } from '@/components/Settings/Basic';
 import React from 'react';
 
 const Page = () => {
-  return <Menu />;
+  return <Basic />;
 };
 
 export default Page;

@@ -27,7 +27,7 @@ export const ContentContainer: FC<Props> = ({ id }) => {
   const { titles } = useMarkdownValues(contentBody?.body);
   useLoading([stateContent, stateBody]);
   const handleClick = useCallback(() => {
-    router.replace(`/contents/${id}/edit`);
+    router.replace(`/contents/${id}/edit`, undefined, { scroll: false });
   }, [id, router]);
   return (
     <div className={styled.root}>

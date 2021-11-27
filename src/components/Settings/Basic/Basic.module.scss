@@ -1,14 +1,4 @@
 .root {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 24px;
-  overflow: hidden;
-  .title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 16px;
-  }
   .form {
     position: relative;
     display: flex;
@@ -37,7 +27,10 @@
       }
     }
     .image {
+      box-sizing: border-box;
       padding: 8px;
+      width: 100%;
+      height: auto;
     }
   }
 }

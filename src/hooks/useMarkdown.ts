@@ -1,21 +1,10 @@
-import { Children, ReactElement, ReactNode, useMemo } from 'react';
+import { useMemo } from 'react';
 import type unist from 'unist';
 import { unified, Processor } from 'unified';
 import remarkParse from 'remark-parse';
 import type mdast from 'mdast';
 import { Parent } from 'mdast';
 export type MarkdownTitles = { text: string; depth: number }[];
-
-const getNodeText = (node: ReactNode): string => {
-  if (!node) return '';
-  if (typeof node === 'string') return node;
-  return (
-    Children.map(node, (c) => {
-      if (!c || typeof c !== 'object') return String(c);
-      return getNodeText((c as ReactElement)?.props?.children);
-    })?.join('') || ''
-  );
-};
 
 export const getTreeText = (
   node: unist.Node & Partial<Parent> & Partial<unist.Literal<string>>

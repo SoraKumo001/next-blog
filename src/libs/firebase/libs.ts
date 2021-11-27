@@ -231,8 +231,16 @@ export const FirebaseConverter: FirestoreDataConverter<Object> = {
     return Object.assign(new entity(), values);
   },
 };
-
-export const getFileList = async (storage: FirebaseStorage, path: string) => {
+export const getAllFiles = async (storage: FirebaseStorage, path?: string) => {
+  const files: string[] = [];
+  const list = await listAll(ref(storage, path));
+  const promise = list.prefixes.map((p) =>
+    getAllFiles(storage, p.fullPath).then((f) => files.push(...f))
+  );
+  await Promise.all(promise);
+  return [...files, ...list.items.map((item) => item.fullPath)];
+};
+export const getFileList = async (storage: FirebaseStorage, path?: string) => {
   const result = await listAll(ref(storage, path));
   return result.items.map((r) => r.name);
 };

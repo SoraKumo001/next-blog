@@ -1,0 +1,27 @@
+.root {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px;
+  overflow: hidden;
+  .frame {
+    min-width: 600px;
+    max-width: 95%;
+    .title {
+      display: flex;
+      align-items: center;
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 16px;
+      border-bottom: #dddddd solid 2px;
+      margin-bottom: 24px;
+      svg {
+        margin: 4px 16px 0px 0px;
+        cursor: pointer;
+        padding: 4px;
+        background: #dddddd;
+        border-radius: 8px;
+      }
+    }
+  }
+}

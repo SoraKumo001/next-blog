@@ -15,13 +15,13 @@ interface Props {}
 export const HeaderContainer: VFC<Props> = () => {
   const { contents } = useFireDoc(firestore, Application, 'root');
   return (
-    <div className={styled.root}>
+    <header className={styled.root}>
       <Link href="/">
         <a className={styled.title}>
           <IconApp />
           {contents?.title}
         </a>
       </Link>
-    </div>
+    </header>
   );
 };

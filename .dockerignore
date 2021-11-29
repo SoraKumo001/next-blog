@@ -6,4 +6,5 @@ out
 .log
 storybook-static
 .env-deploy
+.env.local
 

@@ -102,6 +102,7 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
   const { state: uploadState, dispatch } = useFireUpload();
   const handleUpload = async (src: Blob) => {
     const value = await convertWebp(src);
+    if (!value) throw 'conver error';
     const size = await getImageSize(value);
     dispatch(
       firestorage,

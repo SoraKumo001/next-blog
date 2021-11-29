@@ -7,14 +7,18 @@ const config = {
     cpus: 4,
   },
   webpack: (config, { isServer }) => {
-    if(isServer){ 
-      config.externals = [...config.externals,
-        {"firebase/app":true},
-        {"firebase/auth":true},
-        {"firebase/firestore":true},
-        {"@jsquash/webp": true }]
+    if (isServer) {
+      config.externals = [
+        ...config.externals,
+        { 'firebase/app': true },
+        { 'firebase/auth': true },
+        { 'firebase/firestore': true },
+      ];
     }
-    return config
+    config.experiments = {
+      asyncWebAssembly: true,
+    };
+    return config;
   },
 };
 module.exports = config;

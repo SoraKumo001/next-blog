@@ -1,4 +1,5 @@
-import encode from '@jsquash/webp/encode';
+import { Buffer } from 'buffer';
+import { encode } from './webplib';
 
 export const convertWebp = async (blob: Blob) => {
   if (!blob.type.match(/^image\/(png|jpeg)/)) return blob;
@@ -12,9 +13,9 @@ export const convertWebp = async (blob: Blob) => {
   [canvas.width, canvas.height] = [img.width, img.height];
   const ctx = canvas.getContext('2d')!;
   ctx.drawImage(img, 0, 0);
-  return new Blob([await encode(ctx.getImageData(0, 0, img.width, img.height))], {
-    type: 'image/webp',
-  });
+  const value = await encode(ctx.getImageData(0, 0, img.width, img.height));
+  if (!value) return null;
+  return new Blob([value], { type: 'image/webp' });
 };
 
 export const getImageSize = async (blob: Blob) => {

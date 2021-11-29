@@ -42,7 +42,7 @@ export const ImageField: FC<Props> = ({ className, onChange, children, src, widt
           item.getType('image/png').then(async (value) => {
             const v = await convertWebp(value);
             onChange?.(v);
-            reader?.readAsDataURL(v);
+            v && reader?.readAsDataURL(v);
           });
         }
       });
@@ -67,7 +67,7 @@ export const ImageField: FC<Props> = ({ className, onChange, children, src, widt
         for (const item of e.dataTransfer.files) {
           convertWebp(item).then((blob) => {
             onChange?.(blob);
-            reader?.readAsDataURL(blob);
+            blob && reader?.readAsDataURL(blob);
           });
         }
         e.preventDefault();

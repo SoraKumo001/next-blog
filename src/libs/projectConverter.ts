@@ -10,7 +10,8 @@ export const convertUrl = async (storage: string, url: string) => {
   const image = url.match(re)?.[1];
   if (!image) return url;
   return (
-    (await getDownloadURL(ref(firestorage, decodeURIComponent(image))).catch(() => undefined)) ||
+    (firestorage &&
+      (await getDownloadURL(ref(firestorage, decodeURIComponent(image))).catch(() => undefined))) ||
     url
   );
 };

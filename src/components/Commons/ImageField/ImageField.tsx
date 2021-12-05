@@ -4,6 +4,7 @@ import React, { FC, useEffect, useRef, useState } from 'react';
 import styled from './ImageField.module.scss';
 import { classNames } from '@/libs/classNames';
 import { convertWebp } from '@/libs/webp';
+import { Buffer } from 'buffer';
 interface Props {
   className?: string;
   onChange?: (value: Blob | null) => void;
@@ -21,20 +22,10 @@ export const ImageField: FC<Props> = ({ className, onChange, children, src, widt
   const ref = useRef<HTMLInputElement>(null);
   const [isDrag, setDrag] = useState(false);
   const [imageData, setImageData] = useState<string | undefined>(src);
-  const [reader, setReader] = useState<FileReader>();
-  useEffect(() => {
-    const reader = new FileReader();
-    reader.onload = () => {
-      const { result } = reader;
-      if (typeof result === 'string') {
-        setImageData(result);
-      }
-    };
-    setReader(reader);
-    return () => {
-      reader.onload = null;
-    };
-  }, []);
+  const convertUrl = async (blob: Blob | undefined | null) => {
+    if (!blob) return undefined;
+    return `data:image/webp;base64,` + Buffer.from(await blob.arrayBuffer()).toString('base64');
+  };
   useEffect(() => {
     const handle = () => {
       navigator.clipboard.read().then((items) => {
@@ -42,14 +33,14 @@ export const ImageField: FC<Props> = ({ className, onChange, children, src, widt
           item.getType('image/png').then(async (value) => {
             const v = await convertWebp(value);
             onChange?.(v);
-            v && reader?.readAsDataURL(v);
+            convertUrl(v).then(setImageData);
           });
         }
       });
     };
     addEventListener('paste', handle);
     return () => removeEventListener('paste', handle);
-  }, [onChange, reader]);
+  }, [onChange]);
   return (
     <div
       className={classNames(styled.root, isDrag && styled.dragover, className)}
@@ -67,7 +58,7 @@ export const ImageField: FC<Props> = ({ className, onChange, children, src, widt
         for (const item of e.dataTransfer.files) {
           convertWebp(item).then((blob) => {
             onChange?.(blob);
-            blob && reader?.readAsDataURL(blob);
+            convertUrl(blob).then(setImageData);
           });
         }
         e.preventDefault();
@@ -93,9 +84,10 @@ export const ImageField: FC<Props> = ({ className, onChange, children, src, widt
             type="file"
             accept=".jpg, .png, .gif"
             onChange={(e) => {
-              if (e.currentTarget.files?.[0]) {
-                onChange?.(e.currentTarget.files[0]);
-                reader?.readAsDataURL(e.currentTarget.files[0]);
+              const blob = e.currentTarget.files?.[0];
+              if (blob) {
+                onChange?.(blob);
+                convertUrl(blob).then(setImageData);
               }
             }}
           />

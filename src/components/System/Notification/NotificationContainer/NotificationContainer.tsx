@@ -1,6 +1,6 @@
 import { useSystemDispatch } from '@/hooks/useSystemDispatch';
 import { useSystemSelector } from '@/hooks/useSystemSelector';
-import React, { FC, useCallback, useEffect, useRef, useState } from 'react';
+import React, { FC, useCallback, useEffect, useRef } from 'react';
 import styled from './NotificationContainer.module.scss';
 import { Notification } from '../Notification';
 const fadeTime = 5000;
@@ -16,6 +16,10 @@ export const NotificationContainer: FC<Props> = ({}) => {
   const notifications = useSystemSelector((state) => state.notification);
   const timer = useRef<number>();
   const dispatch = useSystemDispatch();
+  const onAnimationEnd = useCallback(() => {
+    dispatch({ type: 'removeNotification' });
+    timer.current = Date.now();
+  }, [dispatch]);
   useEffect(() => {
     if (notifications?.length === 0) return;
     timer.current = Date.now();
@@ -33,11 +37,8 @@ export const NotificationContainer: FC<Props> = ({}) => {
       }
     }, 10);
     return () => handle && clearInterval(handle);
-  }, [notifications]);
-  const onAnimationEnd = useCallback(() => {
-    dispatch({ type: 'removeNotification' });
-    timer.current = Date.now();
-  }, [dispatch]);
+  }, [notifications, onAnimationEnd]);
+
   if (!notifications || !notifications.length) return null;
   return (
     <div className={styled.root}>

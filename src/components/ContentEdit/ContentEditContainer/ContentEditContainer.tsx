@@ -4,15 +4,11 @@ import { EditWindow } from '../EditWindow';
 
 import {
   deleteDoc,
-  deleteFile,
-  deleteFiles,
   firestorage,
   firestore,
-  getFileList,
   newClass,
-  saveDoc,
+  saveFireDoc,
   useFireDoc,
-  useFireUpload,
 } from '@/libs/firebase';
 import { Content, ContentBody } from '@/types/Content';
 import { ContentView } from '../../Contents/ContentView';
@@ -24,6 +20,8 @@ import { dispatchMarkdown, useMarkdownEditor } from '@react-libraries/markdown-e
 import { v4 as uuidv4 } from 'uuid';
 import { convertWebp, getImageSize } from '@/libs/webp';
 import { Application } from '@/types/Application';
+import { deleteFile, deleteFiles, getFileList } from '@/libs/firebase/storage';
+import { useFireUpload } from '@/libs/firebase/fileHooks';
 interface Props {
   id?: string;
 }
@@ -64,8 +62,8 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
       return list.map((name) => deleteFile(firestorage, `${ContentsImagePath}/${id}/${name}`));
     };
     Promise.all([
-      saveDoc(firestore, content),
-      saveDoc(firestore, contentBody),
+      saveFireDoc(firestore, content),
+      saveFireDoc(firestore, contentBody),
       vacumeImages(),
     ]).then(() => {
       setStateSave('finished');
@@ -73,13 +71,14 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
   };
   const handleDelete = () => {
     setStateDelete('progress');
-    Promise.all([
-      deleteDoc(firestore, content),
-      deleteDoc(firestore, contentBody),
-      deleteFiles(firestorage, `${ContentsImagePath}/${id}`),
-    ]).then(() => {
-      setStateDelete('finished');
-    });
+    firestore &&
+      Promise.all([
+        deleteDoc(firestore, content),
+        deleteDoc(firestore, contentBody),
+        deleteFiles(firestorage, `${ContentsImagePath}/${id}`),
+      ]).then(() => {
+        setStateDelete('finished');
+      });
   };
   const contentBody = useMemo(() => {
     if (stateBody !== 'finished') return undefined;
@@ -104,23 +103,24 @@ export const ContentEditContainer: FC<Props> = ({ id }) => {
     const value = await convertWebp(src);
     if (!value) throw 'conver error';
     const size = await getImageSize(value);
-    dispatch(
-      firestorage,
-      `${ContentsImagePath}/${id}/${uuidv4()}.${value.type.split('/').pop() || ''}`,
-      value,
-      {
-        contentType: value.type,
-        cacheControl: 'public, max-age=31536000, immutable',
-      }
-    ).then((url) => {
-      url &&
-        dispatchMarkdown(event, {
-          type: 'update',
-          payload: {
-            value: `![{"width":"${size.width}px","height":"${size.height}px"}](${url})\n`,
-          },
-        });
-    });
+    firestorage &&
+      dispatch(
+        firestorage,
+        `${ContentsImagePath}/${id}/${uuidv4()}.${value.type.split('/').pop() || ''}`,
+        value,
+        {
+          contentType: value.type,
+          cacheControl: 'public, max-age=31536000, immutable',
+        }
+      ).then((url) => {
+        url &&
+          dispatchMarkdown(event, {
+            type: 'update',
+            payload: {
+              value: `![{"width":"${size.width}px","height":"${size.height}px"}](${url})\n`,
+            },
+          });
+      });
   };
   useNotification(stateSave, { finished: '保存しました' });
   useNotification(stateDelete, { finished: '削除しました' });

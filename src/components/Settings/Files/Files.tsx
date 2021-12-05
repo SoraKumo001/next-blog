@@ -5,11 +5,10 @@ import {
   firestorage,
   firestore,
   getFireDocs,
-  getAllFiles,
   convertFirebaseEntity,
-  saveFile,
-  saveDoc,
+  saveFireDoc,
 } from '@/libs/firebase';
+import { getAllFiles, saveFile } from '@/libs/firebase/storage';
 import { convertImageLink, convertUrl } from '@/libs/projectConverter';
 import { Admin } from '@/types/Admins';
 import { Application } from '@/types/Application';
@@ -40,17 +39,19 @@ export const Files: FC<Props> = ({}) => {
       const values: unknown[] = [];
 
       values.push({ type: 'storage', value: process.env.NEXT_PUBLIC_storageBucket });
-      firestorage.maxOperationRetryTime = 10;
+      if (firestorage) firestorage.maxOperationRetryTime = 10;
       const files = await getAllFiles(firestorage);
-      const promise = files.map((file) =>
-        getBlob(ref(firestorage, file)).then(async (v) =>
-          values.push({
-            type: 'file',
-            contentType: v.type,
-            path: file,
-            value: Buffer.from(await v.arrayBuffer()).toString('base64'),
-          })
-        )
+      const promise = files.map(
+        (file) =>
+          firestorage &&
+          getBlob(ref(firestorage, file)).then(async (v) =>
+            values.push({
+              type: 'file',
+              contentType: v.type,
+              path: file,
+              value: Buffer.from(await v.arrayBuffer()).toString('base64'),
+            })
+          )
       );
       await Promise.all(promise);
       for (const entiry of [Admin, Application, Content, ContentBody]) {
@@ -98,7 +99,7 @@ export const Files: FC<Props> = ({}) => {
                 entity.body = await convertImageLink(storage, entity.body);
               }
             }
-            return saveDoc(firestore, entity);
+            return saveFireDoc(firestore, entity);
           });
         await Promise.all(entities);
       });

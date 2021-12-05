@@ -14,6 +14,6 @@ export const Primary = (args: Parameters<typeof Title>[0]) => (
     <Title {...args}></Title>
   </>
 );
-Primary.args = {} as Parameters<typeof Title>[0];
+Primary.args = { children: 'Title' } as Parameters<typeof Title>[0];
 
 Primary.parameters = {};

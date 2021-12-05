@@ -3,9 +3,7 @@ import { Application } from '@/types/Application';
 import Head from 'next/head';
 import React, { FC, useMemo } from 'react';
 
-interface Props {
-  visible?: boolean;
-}
+interface Props {}
 
 /**
  * Title

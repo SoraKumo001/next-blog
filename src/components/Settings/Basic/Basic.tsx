@@ -2,7 +2,8 @@ import { ImageField } from '@/components/Commons/ImageField';
 import { useAction } from '@/hooks/useAction';
 import { useLoading } from '@/hooks/useLoading';
 import { useNotification } from '@/hooks/useNotification';
-import { firestorage, firestore, saveDoc, saveFile, useFireDoc } from '@/libs/firebase';
+import { firestorage, firestore, saveFireDoc, useFireDoc } from '@/libs/firebase';
+import { saveFile } from '@/libs/firebase/storage';
 import { Application } from '@/types/Application';
 import { Button, Switch, TextField } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -32,7 +33,7 @@ export const Basic: FC<Props> = ({}) => {
             contentType: 'image/webp',
           }));
         if (property.image !== undefined) contents!.cardUrl = url || '';
-        await saveDoc(firestore, contents!);
+        await saveFireDoc(firestore, contents!);
       });
     },
     [contents, dispatch, property]

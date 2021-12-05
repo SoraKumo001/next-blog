@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import IconEdit from '@mui/icons-material/EditOutlined';
 import { SystemButton } from '@/components/Commons/SystemButton';
 import { Content } from '@/types/Content';
-import { firestore, newClass, saveDoc } from '@/libs/firebase';
+import { firestore, newClass, saveFireDoc } from '@/libs/firebase';
 import { useRouter } from 'next/router';
 import { useAdmin } from '@/hooks/useAdmin';
 interface Props {}
@@ -22,7 +22,7 @@ export const NewContents: FC<Props> = ({}) => {
       system: false,
       keywords: [],
     });
-    saveDoc(firestore, contents).then((id) => {
+    saveFireDoc(firestore, contents).then((id) => {
       router.push(`/contents/${id}/edit`);
     });
   };

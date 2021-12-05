@@ -20,7 +20,7 @@ export const LoginContainer: FC<Props> = ({}) => {
     } else {
       dispatch({ type: 'login' });
     }
-  }, []);
+  }, [dispatch, isAdmin]);
   useEffect(() => {
     if (state === 'finished' || state === 'error') router.back();
   }, [router, state]);

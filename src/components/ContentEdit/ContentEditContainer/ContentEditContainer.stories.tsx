@@ -3,7 +3,7 @@ import { ContentEditContainer } from '.';
 import { Decorator } from '@/storybook';
 
 const StoryInfo = {
-  title: 'Components/Contents/ContentEditContainer',
+  title: 'Components/ContentEdit/ContentEditContainer',
   decorators: [Decorator],
   component: ContentEditContainer,
 };
@@ -14,6 +14,6 @@ export const Primary = (args: Parameters<typeof ContentEditContainer>[0]) => (
     <ContentEditContainer {...args}></ContentEditContainer>
   </>
 );
-Primary.args = {} as Parameters<typeof ContentEditContainer>[0];
+Primary.args = { id: 'yjmZIWXnHuv9kwg375v0' } as Parameters<typeof ContentEditContainer>[0];
 
 Primary.parameters = {};

@@ -1,1 +1,1 @@
-export * from './BaseFrame'
+export * from './BaseFrame';

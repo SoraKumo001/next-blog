@@ -15,9 +15,6 @@ const config = {
         { 'firebase/firestore': true },
       ];
     }
-    config.experiments = {
-      asyncWebAssembly: true,
-    };
     return config;
   },
 };

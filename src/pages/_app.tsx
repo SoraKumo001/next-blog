@@ -1,7 +1,7 @@
 import { LoadingContainer } from '@/components/System/LoadingContainer';
 import { NotificationContainer } from '@/components/System/Notification/NotificationContainer';
 import { SystemContext } from '@/libs/SystemContext';
-import { CachesType, createCache, getDataFromTree } from '@react-libraries/use-ssr';
+import { CachesType, createCache, getDataFromTree, Provider } from '@react-libraries/use-ssr';
 import DateAdapter from '@mui/lab/AdapterDateFns';
 import { AppContext, AppProps } from 'next/app';
 import React from 'react';
@@ -25,11 +25,19 @@ const App = (props: AppProps & { cache: CachesType }) => {
         <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
       </Head>
       <LocalizationProvider dateAdapter={DateAdapter}>
-        <HeaderContainer />
-        <Component />
-        <FooterButtons />
-        <NotificationContainer />
-        <LoadingContainer />
+        <Provider
+          onUpdate={(v) =>
+            typeof window !== 'undefined' &&
+            process.env.NODE_ENV === 'development' &&
+            console.log(JSON.stringify(v))
+          }
+        >
+          <HeaderContainer />
+          <Component />
+          <FooterButtons />
+          <NotificationContainer />
+          <LoadingContainer />
+        </Provider>
       </LocalizationProvider>
     </SystemContext.Provider>
   );

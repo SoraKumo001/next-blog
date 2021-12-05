@@ -1,6 +1,6 @@
 import { SystemButton } from '@/components/Commons/SystemButton';
 import { useAdmin } from '@/hooks/useAdmin';
-import { firestore, getFireDoc, newClass, saveDoc } from '@/libs/firebase';
+import { firestore, getFireDoc, newClass, saveFireDoc } from '@/libs/firebase';
 import { Content } from '@/types/Content';
 import { useRouter } from 'next/router';
 import React, { FC } from 'react';
@@ -26,7 +26,7 @@ export const EditTop: FC<Props> = ({}) => {
         system: true,
         keywords: [],
       });
-      saveDoc(firestore, contents).then((id) => {
+      saveFireDoc(firestore, contents).then((id) => {
         router.push(`/contents/${id}/edit`);
       });
     } else {

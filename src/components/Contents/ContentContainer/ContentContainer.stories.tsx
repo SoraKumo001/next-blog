@@ -14,6 +14,6 @@ export const Primary = (args: Parameters<typeof ContentContainer>[0]) => (
     <ContentContainer {...args}></ContentContainer>
   </>
 );
-Primary.args = {} as Parameters<typeof ContentContainer>[0];
+Primary.args = { id: 'yjmZIWXnHuv9kwg375v0' } as Parameters<typeof ContentContainer>[0];
 
 Primary.parameters = {};

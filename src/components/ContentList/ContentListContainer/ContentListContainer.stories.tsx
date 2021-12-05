@@ -3,7 +3,7 @@ import { ContentListContainer } from '.';
 import { Decorator } from '@/storybook';
 
 const StoryInfo = {
-  title: 'Components/Contents/ContentListContainer',
+  title: 'Components/ContentList/ContentListContainer',
   decorators: [Decorator],
   component: ContentListContainer,
 };

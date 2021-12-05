@@ -3,7 +3,7 @@ import {
   firebaseAuth,
   firestore,
   newClass,
-  saveDoc,
+  saveFireDoc,
   useAuth,
   useFireDoc,
 } from '@/libs/firebase';
@@ -52,12 +52,12 @@ export const useLogin = () => {
 
 const initSystem = async (email: string) => {
   const admin = newClass(Admin, { id: email });
-  await saveDoc(firestore, admin);
+  await saveFireDoc(firestore, admin);
   const app = newClass(Application, {
     id: 'root',
     title: 'Blog',
     description: '',
     directStorage: false,
   });
-  return saveDoc(firestore, app);
+  return saveFireDoc(firestore, app);
 };

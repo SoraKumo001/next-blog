@@ -13,10 +13,22 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_appId,
   measurementId: process.env.NEXT_PUBLIC_measurementId,
 };
-const app = initializeApp(firebaseConfig);
-export const firebaseAuth = getAuth(app);
-export const firestore = getFirestore(app);
-export const firestorage = getStorage(app);
 
-typeof window !== 'undefined' && enableMultiTabIndexedDbPersistence(firestore).catch(() => null);
+const getTry = <T>(proc: () => T) => {
+  let result: T | undefined = undefined;
+  try {
+    result = proc();
+  } catch (_) {
+    //
+  }
+  return result;
+};
+const app = initializeApp(firebaseConfig);
+export const firebaseAuth = getTry(() => getAuth(app));
+export const firestore = getTry(() => getFirestore(app));
+export const firestorage = getTry(() => getStorage(app));
+
+typeof window !== 'undefined' &&
+  firestore &&
+  enableMultiTabIndexedDbPersistence(firestore).catch(() => null);
 export const authProvider = new GoogleAuthProvider();

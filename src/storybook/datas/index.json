@@ -1,0 +1,47 @@
+{
+  "%40react-libraries%2Fuse-ssr/%7B%22path%22%3A%22Application%22%7D/root/": [
+    "finished",
+    {
+      "type": "document",
+      "collection": "Application",
+      "values": {
+        "id": "root",
+        "title": "Blog",
+        "description": "Blogシステム",
+        "directStorage": false,
+        "cardUrl": "https://firebasestorage.googleapis.com/v0/b/next-blog-01.appspot.com/o/application%2Fcard.webp?alt=media&token=8cc7ce22-9f56-42fa-a7b0-35bf5d9fca61"
+      }
+    }
+  ],
+  "%40react-libraries%2Fuse-ssr/%7B%22path%22%3A%22Content%22%7D/%40top/": [
+    "finished",
+    {
+      "type": "document",
+      "collection": "Content",
+      "values": {
+        "id": "@top",
+        "title": "@top",
+        "visible": true,
+        "system": true,
+        "keywords": [],
+        "createdAt": "2021-12-05T06:58:08.052Z",
+        "updatedAt": "2021-12-05T06:58:08.052Z"
+      }
+    }
+  ],
+  "%40react-libraries%2Fuse-ssr/%7B%22path%22%3A%22ContentBody%22%7D/%40top/": [
+    "finished",
+    {
+      "type": "document",
+      "collection": "ContentBody",
+      "values": {
+        "id": "@top",
+        "body": "Topてすと"
+      }
+    }
+  ],
+  "%40react-libraries%2Fuse-ssr/%7B%22path%22%3A%22Admins%22%7D/mofon001%40gmail.com/": [
+    "idle",
+    null
+  ]
+}

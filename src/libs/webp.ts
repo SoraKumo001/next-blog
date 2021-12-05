@@ -1,6 +1,5 @@
 import { Buffer } from 'buffer';
-import { encode } from './webplib';
-
+import { encode } from '@node-libraries/wasm-webp-encoder';
 export const convertWebp = async (blob: Blob) => {
   if (!blob.type.match(/^image\/(png|jpeg)/)) return blob;
   const src = await blob

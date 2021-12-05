@@ -32,19 +32,11 @@ import {
   isFirebaseEntity,
   newClass,
 } from './libs';
-import {
-  FirebaseStorage,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-  UploadMetadata,
-} from 'firebase/storage';
-import { saveDoc } from '.';
 
 type StatType = 'idle' | 'progress' | 'finished' | 'error';
 type LoginType = 'idle' | 'logined' | 'logouted' | 'error';
 
-export const useAuth = (auth: Auth, provider: GoogleAuthProvider) => {
+export const useAuth = (auth: Auth | undefined, provider: GoogleAuthProvider) => {
   const [state, setState] = useState<StatType>('idle');
   const [loginState, setLoginState] = useState<LoginType>('idle');
   const [error, setError] = useState<unknown>('');
@@ -57,43 +49,46 @@ export const useAuth = (auth: Auth, provider: GoogleAuthProvider) => {
           setState('progress');
           const token = action.payload?.token;
           if (token) {
-            signInWithCredential(auth, GoogleAuthProvider.credential(token))
-              .then((result) => {
-                setCredential(result);
-                setState('finished');
-                setLoginState('logined');
-              })
-              .catch((e) => {
-                setError(e);
-                setState('error');
-              });
+            auth &&
+              signInWithCredential(auth, GoogleAuthProvider.credential(token))
+                .then((result) => {
+                  setCredential(result);
+                  setState('finished');
+                  setLoginState('logined');
+                })
+                .catch((e) => {
+                  setError(e);
+                  setState('error');
+                });
           } else {
-            signInWithPopup(auth, provider)
-              .then((result) => {
-                setCredential(result);
-                setState('finished');
-                setLoginState('logined');
-              })
-              .catch((e) => {
-                setError(e);
-                setLoginState('error');
-                setState('error');
-              });
+            auth &&
+              signInWithPopup(auth, provider)
+                .then((result) => {
+                  setCredential(result);
+                  setState('finished');
+                  setLoginState('logined');
+                })
+                .catch((e) => {
+                  setError(e);
+                  setLoginState('error');
+                  setState('error');
+                });
           }
           break;
         case 'logout':
           setState('progress');
-          signOut(auth)
-            .then(() => {
-              setCredential(undefined);
-              setState('finished');
-              setLoginState('logouted');
-            })
-            .catch((e) => {
-              setError(e);
-              setState('error');
-              setLoginState('error');
-            });
+          auth &&
+            signOut(auth)
+              .then(() => {
+                setCredential(undefined);
+                setState('finished');
+                setLoginState('logouted');
+              })
+              .catch((e) => {
+                setError(e);
+                setState('error');
+                setLoginState('error');
+              });
           break;
       }
     },
@@ -106,7 +101,7 @@ export const useFireDocs = <
   T extends { new (...args: any[]): {} },
   R extends T extends { new (...args: any[]): infer R } ? R : never
 >(
-  db: Firestore,
+  db: Firestore | undefined,
   entity: T,
   options: {
     where?: Parameters<typeof where> | Parameters<typeof where>[];
@@ -123,6 +118,7 @@ export const useFireDocs = <
   const name = JSON.stringify({ path, ...options });
   const property = useRef<{ unsubscribe?: () => void; init?: boolean }>({}).current;
   const docQuery = useMemo(() => {
+    if (!db) return undefined;
     const { where: _where, limit: _limit, order, start, startAfter: _startAfter, end } = options;
 
     const constrains: QueryConstraint[] = [];
@@ -186,12 +182,13 @@ export const useFireDocs = <
         return;
       }
       setState(['progress', contents]);
-      await getDocs(docQuery)
-        .then((result) => setState(['finished', result.docs.map((v) => v.data()) as R[]]))
-        .catch((e) => {
-          setState(['error', undefined]);
-          console.error(e);
-        });
+      docQuery &&
+        (await getDocs(docQuery)
+          .then((result) => setState(['finished', result.docs.map((v) => v.data()) as R[]]))
+          .catch((e) => {
+            setState(['error', undefined]);
+            console.error(e);
+          }));
     },
     ['idle', undefined]
   );
@@ -216,7 +213,7 @@ export const useFireDoc = <
   T extends { new (...args: any[]): {} },
   R extends T extends { new (...args: any[]): infer R } ? R : never
 >(
-  db: Firestore,
+  db: Firestore | undefined,
   entity: T,
   id?: string | null
 ) => {
@@ -225,7 +222,7 @@ export const useFireDoc = <
   const name = JSON.stringify({ path });
   const property = useRef<{ unsubscribe?: () => void; init?: boolean }>({}).current;
   const docQuery = useMemo(() => {
-    if (!id) return undefined;
+    if (!id || !db) return undefined;
     return doc(collection(db, path), id).withConverter(FirebaseConverter);
   }, [id, db, path]);
   useEffect(() => {
@@ -257,11 +254,10 @@ export const useFireDoc = <
   const [state, setState] = useSSR<[StatType, R | undefined]>(
     [name, String(id)],
     async (state, setState) => {
-      const [status, contents] = state;
-      if (id === undefined || id === null) {
-        setState(['idle', undefined]);
+      if (id === undefined || id === null || !db) {
         return;
       }
+      const [status, contents] = state;
       if (!docQuery || status !== 'idle') {
         return;
       }
@@ -290,44 +286,4 @@ export const useFireDoc = <
     }
   }
   return { dispatch, state: state[0], contents: state[1] };
-};
-export const useFireUpload = () => {
-  const [state, setState] = useState<StatType>('idle');
-  const dispatch = useCallback(
-    async (
-      storage: FirebaseStorage,
-      path: string,
-      data: Blob | Uint8Array | ArrayBuffer,
-      metadata?: UploadMetadata
-    ) => {
-      setState('progress');
-      const storageRef = ref(storage, path);
-      const url = await uploadBytes(storageRef, data, metadata)
-        .then(async () => await getDownloadURL(storageRef).catch(() => undefined))
-        .catch(() => undefined);
-      if (url) {
-        setState('finished');
-        return url;
-      }
-      setState('error');
-      return undefined;
-    },
-    []
-  );
-  return { state, dispatch };
-};
-
-export const useFireSave = () => {
-  const [state, setState] = useState<StatType>('idle');
-  const dispatch = useCallback((store: Firestore, entity: Object) => {
-    setState('progress');
-    saveDoc(store, entity)
-      .then(() => {
-        setState('finished');
-      })
-      .catch(() => {
-        setState('error');
-      });
-  }, []);
-  return { state, dispatch };
 };

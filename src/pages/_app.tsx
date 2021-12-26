@@ -15,7 +15,6 @@ import { GoogleAnalytics } from '@/components/Commons/GoogleAnalytics';
 
 const App = (props: AppProps & { cache: CachesType }) => {
   const { Component, cache } = props;
-  createCache(cache);
   return (
     <SystemContext.Provider>
       <GoogleAnalytics />
@@ -26,6 +25,7 @@ const App = (props: AppProps & { cache: CachesType }) => {
       </Head>
       <LocalizationProvider dateAdapter={DateAdapter}>
         <Provider
+          value={cache}
           onUpdate={(v) =>
             typeof window !== 'undefined' &&
             process.env.NODE_ENV === 'development' &&

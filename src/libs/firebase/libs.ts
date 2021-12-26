@@ -150,7 +150,7 @@ export const getFirestoreEntityTypes = <T extends { new (...args: any[]): {} }>(
 };
 
 export const convertObject = (value: unknown): unknown => {
-  if (typeof value === 'object' && value !== null) {
+  if (typeof value === 'object' && value !== null && !(value instanceof Date)) {
     if (Array.isArray(value)) {
       return value.map((v) => convertObject(v));
     }

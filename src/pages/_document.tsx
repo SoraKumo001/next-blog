@@ -1,4 +1,3 @@
-/* eslint-disable @next/next/no-page-custom-font */
 import { ServerStyleSheets } from '@mui/styles';
 import Document, { Head, Html, Main, NextScript, DocumentContext } from 'next/document';
 

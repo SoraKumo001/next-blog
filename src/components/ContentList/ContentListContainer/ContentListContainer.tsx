@@ -20,7 +20,7 @@ export const ContentListContainer: FC<Props> = ({}) => {
   const isAdmin = useAdmin();
   const whereSystem = ['system', '==', false] as Parameters<typeof where>;
   const { state, contents } = useFireDocs(firestore, Content, {
-    order: ['updatedAt'],
+    order: [['updatedAt', 'desc']],
     where: isAdmin ? whereSystem : [whereSystem, ['visible', '==', true]],
   });
   useLoading([state]);

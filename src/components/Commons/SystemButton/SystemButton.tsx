@@ -6,6 +6,7 @@ interface Props {
   icon: ReactNode;
   onClick?: React.MouseEventHandler<HTMLDivElement>;
   href?: string;
+  children?: React.ReactNode;
 }
 
 /**

@@ -4,6 +4,7 @@ import IconInfo from '@mui/icons-material/InfoOutlined';
 interface Props {
   onClose?: () => void;
   onAnimationEnd?: AnimationEventHandler<HTMLDivElement>;
+  children?: React.ReactNode;
 }
 
 /**

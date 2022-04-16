@@ -3,7 +3,9 @@ import { Application } from '@/types/Application';
 import Head from 'next/head';
 import React, { FC, useMemo } from 'react';
 
-interface Props {}
+interface Props {
+  children?: React.ReactNode;
+}
 
 /**
  * Title

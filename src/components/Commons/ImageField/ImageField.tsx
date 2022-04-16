@@ -11,6 +11,7 @@ interface Props {
   src?: string;
   width?: number;
   height?: number;
+  children?: React.ReactNode;
 }
 
 /**

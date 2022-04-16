@@ -117,7 +117,7 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
       className={styled.root}
       components={components}
       transformImageUri={handleImage}
-      plugins={[plugin]}
+      remarkPlugins={[plugin]}
     >
       {children || ''}
     </ReactMarkdown>

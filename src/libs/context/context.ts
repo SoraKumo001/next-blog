@@ -2,6 +2,7 @@ import React, {
   Context,
   createContext,
   ReactNode,
+  useCallback,
   useContext,
   useEffect,
   useRef,
@@ -62,7 +63,7 @@ export const useSelector = <T, K, R extends Reducer<T>>(
   selector: (state: T) => K
 ) => {
   const manager = useContext<Manager<T>>(context as unknown as Context<Manager<T>>);
-  const [state, dispatch] = useState(() => selector(manager.state));
+  const [state, dispatch] = useState(() => selector(manager?.state));
   useEffect(() => {
     const v = [dispatch as React.Dispatch<React.SetStateAction<unknown>>, selector] as const;
     manager.dispatches.add(v);
@@ -76,25 +77,28 @@ export const useSelector = <T, K, R extends Reducer<T>>(
 };
 export const useDispatch = <T, K extends Reducer<T> | undefined>(context: CustomContext<T, K>) => {
   const manager = useContext<Manager<T>>(context as unknown as Context<Manager<T>>);
-  const { dispatches } = manager;
-  return (
-    state:
-      | (typeof context['Reducer'] extends Reducer<T>
-          ? Parameters<typeof context['Reducer']>[1]
-          : T)
-      | ((state: T) => T)
-  ) => {
-    const newState =
-      typeof state === 'function'
-        ? (state as (state: T) => T)(manager.state)
-        : context.Reducer
-        ? context.Reducer(manager.state, state)
-        : state;
-    if (newState !== state) {
-      manager.state = newState;
-      dispatches.forEach(([dispatch, selector]) => dispatch(selector(newState)));
-    }
-  };
+  const { dispatches } = manager || {};
+  return useCallback(
+    (
+      state:
+        | (typeof context['Reducer'] extends Reducer<T>
+            ? Parameters<typeof context['Reducer']>[1]
+            : T)
+        | ((state: T) => T)
+    ) => {
+      const newState =
+        typeof state === 'function'
+          ? (state as (state: T) => T)(manager.state)
+          : context.Reducer
+          ? context.Reducer(manager.state, state)
+          : state;
+      if (newState !== state) {
+        manager.state = newState;
+        dispatches.forEach(([dispatch, selector]) => dispatch(selector(newState)));
+      }
+    },
+    [context, dispatches, manager]
+  );
 };
 
 export { createCustomContext as createContext };

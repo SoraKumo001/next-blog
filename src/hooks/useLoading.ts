@@ -9,5 +9,5 @@ export const useLoading = (states: (string | boolean)[]) => {
       dispatch({ type: 'setLoading', payload: true });
       return () => dispatch({ type: 'setLoading', payload: false });
     }
-  }, [loading]);
+  }, [dispatch, loading]);
 };

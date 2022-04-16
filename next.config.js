@@ -5,6 +5,7 @@ const config = {
   //swcMinify: true,
   experimental: {
     cpus: 4,
+    runtime: 'edge',
   },
   webpack: (config, { isServer }) => {
     if (isServer) {

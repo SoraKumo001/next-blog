@@ -2,12 +2,12 @@ import { LoadingContainer } from '@/components/System/LoadingContainer';
 import { NotificationContainer } from '@/components/System/Notification/NotificationContainer';
 import { SystemContext } from '@/libs/SystemContext';
 import { CachesType, getDataFromTree, Provider } from '@react-libraries/use-ssr';
-import DateAdapter from '@mui/lab/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { AppContext, AppProps } from 'next/app';
 import React from 'react';
 import 'normalize.css';
 import '@/styles/app.scss';
-import { LocalizationProvider } from '@mui/lab';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 import { FooterButtons } from '@/components/System/FooterButtons';
 import Head from 'next/head';
 import { HeaderContainer } from '@/components/System/HeaderContainer';
@@ -23,7 +23,7 @@ const App = (props: AppProps & { cache: CachesType }) => {
         <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width,minimum-scale=1,initial-scale=1" />
       </Head>
-      <LocalizationProvider dateAdapter={DateAdapter}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Provider
           value={cache}
           onUpdate={(v) =>

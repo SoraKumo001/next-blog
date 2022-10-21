@@ -1,7 +1,7 @@
 import { SystemContext } from '@/libs/SystemContext';
-import { LocalizationProvider } from '@mui/lab';
+import { LocalizationProvider } from '@mui/x-date-pickers';
 import { Provider } from '@react-libraries/use-ssr';
-import DateAdapter from '@mui/lab/AdapterDateFns';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import React from 'react';
 import data from './datas/index.json';
 import '@/styles/app.scss';
@@ -10,7 +10,7 @@ const initialData = { loading: 1, login: true };
 
 export const Decorator = (Story: React.FunctionComponent) => (
   <SystemContext.Provider value={initialData}>
-    <LocalizationProvider dateAdapter={DateAdapter}>
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Provider value={data}>
         <div
           style={{

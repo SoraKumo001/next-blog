@@ -3,13 +3,13 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 yarn
 COPY . .
-RUN yarn build && yarn --production
+RUN yarn build
 
 FROM node:alpine
 WORKDIR /app
-COPY --from=build /app/node_modules ./node_modules
-COPY --from=build /app/.next ./.next
-COPY --from=build /app/.env ./.env
-COPY --from=build /app/package.json .
+COPY --from=build /app/.next/standalone ./
+COPY --from=build /app/.next/static ./.next/static
+COPY --from=build /app/public ./public
+
 EXPOSE 3000
-CMD ["yarn","start"]
+CMD ["node","server.js"]

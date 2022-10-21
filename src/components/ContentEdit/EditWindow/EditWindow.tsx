@@ -3,7 +3,7 @@ import styled from './EditWindow.module.scss';
 import { VirtualWindow } from '@react-libraries/virtual-window';
 import { MarkdownEditor, MarkdownEvent } from '@react-libraries/markdown-editor';
 import { Button, Switch, TextField } from '@mui/material';
-import { DateTimePicker } from '@mui/lab';
+import { DateTimePicker } from '@mui/x-date-pickers';
 import Box from '@mui/material/Box';
 import { Content, ContentBody } from '@/types/Content';
 

@@ -86,7 +86,12 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
         <code className={className}>
-          <PrismAsync style={prism} language={match[1]} PreTag="div" {...{ ...props, ref: null }}>
+          <PrismAsync
+            style={prism as any}
+            language={match[1]}
+            PreTag="div"
+            {...{ ...props, ref: null }}
+          >
             {String(children).replace(/\n$/, '')}{' '}
           </PrismAsync>
         </code>

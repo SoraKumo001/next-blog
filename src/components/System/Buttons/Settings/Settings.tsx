@@ -2,14 +2,14 @@ import { SystemButton } from '@/components/Commons/SystemButton';
 import React, { FC } from 'react';
 import IconSetting from '@mui/icons-material/Settings';
 import { useAdmin } from '@/hooks/useAdmin';
-interface Props {}
+interface Props { }
 
 /**
  * Settings
  *
  * @param {Props} { }
  */
-export const Settings: FC<Props> = ({}) => {
+export const Settings: FC<Props> = ({ }) => {
   const isAdmin = useAdmin();
   if (!isAdmin) return null;
   return (

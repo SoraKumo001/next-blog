@@ -2,10 +2,13 @@
  * @type { import("next").NextConfig}
  */
 const config = {
-  //swcMinify: true,
   experimental: {
     cpus: 4,
-    runtime: 'edge',
+  },
+  output: 'standalone',
+  compiler: {
+    styledComponents: true,
+    emotion: true,
   },
   webpack: (config, { isServer }) => {
     if (isServer) {

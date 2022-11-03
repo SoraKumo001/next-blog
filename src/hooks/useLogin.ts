@@ -56,6 +56,7 @@ const initSystem = async (email: string) => {
   const app = newClass(Application, {
     id: 'root',
     title: 'Blog',
+    host: 'https://localhost/',
     description: '',
     directStorage: false,
   });

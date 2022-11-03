@@ -26,11 +26,11 @@ const App = (props: AppProps & { cache: CachesType }) => {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Provider
           value={cache}
-          onUpdate={(v) =>
+          onUpdate={(v) => {
             typeof window !== 'undefined' &&
-            process.env.NODE_ENV === 'development' &&
-            console.log(JSON.stringify(v))
-          }
+              process.env.NODE_ENV === 'development' &&
+              console.log(JSON.stringify(v));
+          }}
         >
           <HeaderContainer />
           <Component />

@@ -209,6 +209,12 @@ export const useFireDocs = <
   }
   return { dispatch, state: state[0], contents: state[1] };
 };
+
+export const getCollection = <T extends { new (...args: any[]): {} }>(entity: T) => {
+  const properties = entity.prototype as FirestoreDecoratorType;
+  return properties.__collection!;
+};
+
 export const useFireDoc = <
   T extends { new (...args: any[]): {} },
   R extends T extends { new (...args: any[]): infer R } ? R : never

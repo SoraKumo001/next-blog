@@ -29,15 +29,18 @@ export const ImageField: FC<Props> = ({ className, onChange, children, src, widt
   };
   useEffect(() => {
     const handle = () => {
-      navigator.clipboard.read().then((items) => {
-        for (const item of items) {
-          item.getType('image/png').then(async (value) => {
-            const v = await convertWebp(value);
-            onChange?.(v);
-            convertUrl(v).then(setImageData);
-          });
-        }
-      });
+      navigator.clipboard
+        .read()
+        .then((items) => {
+          for (const item of items) {
+            item.getType('image/png').then(async (value) => {
+              const v = await convertWebp(value);
+              onChange?.(v);
+              convertUrl(v).then(setImageData);
+            });
+          }
+        })
+        .catch(() => {});
     };
     addEventListener('paste', handle);
     return () => removeEventListener('paste', handle);

@@ -18,6 +18,7 @@ export const Title: FC<Props> = ({ children }) => {
     return React.Children.map(children, (c) => (typeof c === 'object' ? '' : c))?.join('');
   }, [children]);
   const title = (subTitle || '') + (contents?.title ? ` | ${contents.title}` : '');
+  const imageUrl = `${contents?.host}api/og?title=${encodeURI(subTitle || '')}&name=${encodeURI(contents?.title || '')}`;
   return (
     <>
       <Head>
@@ -26,14 +27,11 @@ export const Title: FC<Props> = ({ children }) => {
         <meta property="og:title" content={title} />
         <meta property="og:description" content={contents?.description} />
         <meta property="og:type" content="website" />
-        <meta property="twitter:card" content={'summary'} />
-        <meta property="twitter:title" content={title} />
-        <meta property="twitter:description" content={contents?.description} />
-        {contents?.cardUrl && (
-          <>
-            <meta name="twitter:image" content={contents.cardUrl} />
-          </>
-        )}
+        <meta property="og:image" content={imageUrl} />
+        <meta name="twitter:card" content={'summary_large_image'} />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={contents?.description} />
+        <meta name="twitter:image" content={imageUrl} />
       </Head>
     </>
   );

@@ -20,9 +20,7 @@ export const BaseFrame: FC<Props> = ({ title, children }) => {
       <div className={styled.frame}>
         <div className={styled.title}>
           <Link href={router.asPath + '/..'} passHref={true}>
-            <a>
-              <IconBack />
-            </a>
+            <IconBack />
           </Link>
           {title}
         </div>

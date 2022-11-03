@@ -11,14 +11,14 @@ import React, { FC, useCallback, useRef } from 'react';
 import { BaseFrame } from '../BaseFrame';
 import styled from './Basic.module.scss';
 
-interface Props {}
+interface Props { }
 
 /**
  * Basic
  *
  * @param {Props} { }
  */
-export const Basic: FC<Props> = ({}) => {
+export const Basic: FC<Props> = ({ }) => {
   const router = useRouter();
   const { state, contents } = useFireDoc(firestore, Application, 'root');
   const { state: stateUpdate, dispatch } = useAction();
@@ -47,6 +47,9 @@ export const Basic: FC<Props> = ({}) => {
   );
   useLoading([state, stateUpdate]);
   useNotification(stateUpdate, { finished: '設定を保存しました' });
+  if (!contents)
+    return null;
+
   return (
     <BaseFrame title="Basic Settings">
       <div className={styled.root}>
@@ -57,23 +60,31 @@ export const Basic: FC<Props> = ({}) => {
             size="small"
             name="title"
             fullWidth
-            defaultValue={contents?.title}
+            defaultValue={contents.title}
             onChange={(e) => {
-              contents!.title = e.currentTarget.value;
+              contents.title = e.currentTarget.value;
             }}
+          />
+          <TextField
+            label="Host"
+            size="small"
+            name="host"
+            fullWidth
+            defaultValue={contents.host}
+            onChange={(e) => (contents.host = e.currentTarget.value)}
           />
           <TextField
             label="Description"
             size="small"
             name="description"
             fullWidth
-            defaultValue={contents?.description}
-            onChange={(e) => (contents!.description = e.currentTarget.value)}
+            defaultValue={contents.description}
+            onChange={(e) => (contents.description = e.currentTarget.value)}
           />
           <div className={styled.line}>
             <Switch
-              defaultChecked={contents?.directStorage}
-              onChange={(e) => (contents!.directStorage = e.currentTarget.checked)}
+              defaultChecked={contents.directStorage}
+              onChange={(e) => (contents.directStorage = e.currentTarget.checked)}
             />
             <a
               href={`https://console.cloud.google.com/storage/browser/${process.env.NEXT_PUBLIC_storageBucket};tab=permissions`}

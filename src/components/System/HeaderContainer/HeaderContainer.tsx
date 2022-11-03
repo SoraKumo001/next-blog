@@ -16,11 +16,9 @@ export const HeaderContainer: VFC<Props> = () => {
   const { contents } = useFireDoc(firestore, Application, 'root');
   return (
     <header className={styled.root}>
-      <Link href="/">
-        <a className={styled.title}>
-          <IconApp />
-          {contents?.title}
-        </a>
+      <Link href="/" className={styled.title}>
+        <IconApp />
+        {contents?.title}
       </Link>
     </header>
   );

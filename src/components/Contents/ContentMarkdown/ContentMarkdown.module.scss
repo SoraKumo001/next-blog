@@ -1,14 +1,15 @@
-$LebelMargin: 16px;
+$LabelMargin: 16px;
 .root {
   @for $i from 2 through 7 {
     h#{$i} {
-      margin-left: ($i - 1) * $LebelMargin;
+      margin-left: ($i - 1) * $LabelMargin;
     }
   }
   @for $i from 1 through 7 {
+    h#{$i} ~ ul,
     h#{$i} ~ p,
     h#{$i} ~ pre {
-      margin-left: ($i) * $LebelMargin;
+      margin-left: ($i) * $LabelMargin;
     }
   }
   h1.title {
@@ -33,5 +34,14 @@ $LebelMargin: 16px;
     height: 720px;
     border: #dddddd;
     background: #f0f0f0;
+  }
+  .plain {
+    display: inline-block;
+    font-weight: 500;
+    font-family: 'Courier New', Courier, monospace;
+    background: #dceef0;
+    border-radius: 2px;
+    padding: 0 4px;
+    margin: 0 1px;
   }
 }

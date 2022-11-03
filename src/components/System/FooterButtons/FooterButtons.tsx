@@ -5,20 +5,19 @@ import { NewContents } from '../Buttons/NewContents';
 import { Settings } from '../Buttons/Settings';
 import styled from './FooterButtons.module.scss';
 
-interface Props { }
+interface Props {}
 
 /**
  * FooterButtons
  *
  * @param {Props} { }
  */
-export const FooterButtons: FC<Props> = ({ }) => {
-  const [isVisible, setVisible] = useState(false)
+export const FooterButtons: FC<Props> = ({}) => {
+  const [isVisible, setVisible] = useState(false);
   useEffect(() => {
-    setVisible(true)
-  }, [setVisible])
-  if (!isVisible)
-    return null;
+    setVisible(true);
+  }, [setVisible]);
+  if (!isVisible) return null;
   return (
     <div className={styled.root}>
       <Login />

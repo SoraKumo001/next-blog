@@ -3,13 +3,14 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn/v6 yarn
 COPY . .
-RUN yarn build
+RUN yarn build && \
+  cp -r -u .next/server .next/standalone/.next && \
+  cp -r -u .next/static .next/standalone/.next && \
+  cp -r -u public .next/standalone
 
 FROM node:alpine
 WORKDIR /app
 COPY --from=build /app/.next/standalone ./
-COPY --from=build /app/.next/static ./.next/static
-COPY --from=build /app/public ./public
 
 EXPOSE 3000
 CMD ["node","server.js"]

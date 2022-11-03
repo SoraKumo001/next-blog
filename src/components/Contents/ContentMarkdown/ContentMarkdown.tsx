@@ -62,8 +62,8 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
         );
       }
       return (
-        <Link href={href!}>
-          <a target={href?.match(/https?:/) ? '_blank' : undefined}>{children}</a>
+        <Link href={href!} target={href?.match(/https?:/) ? '_blank' : undefined}>
+          {children}
         </Link>
       );
     },
@@ -82,7 +82,7 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
       } catch {}
       return <img src={src} alt="" />;
     },
-    code({ inline, className, children, ...props }) {
+    code({ inline, className, children, node, ...props }) {
       const match = /language-(\w+)/.exec(className || '');
       return !inline && match ? (
         <code className={className}>
@@ -96,7 +96,7 @@ export const ContentMarkdown: FC<Props> = ({ directStorage, children }) => {
           </PrismAsync>
         </code>
       ) : (
-        <code className={className} {...props}>
+        <code className={className || styled.plain} {...props}>
           {children}
         </code>
       );

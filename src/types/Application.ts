@@ -7,6 +7,8 @@ export class Application {
   @FirestoreProperty('string')
   title!: string;
   @FirestoreProperty('string')
+  host!: string;
+  @FirestoreProperty('string')
   description!: string;
   @FirestoreProperty('boolean')
   directStorage!: boolean;

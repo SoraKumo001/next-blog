@@ -32,24 +32,27 @@ export const ContentListContainer: FC<Props> = ({}) => {
         <div className={styled.title}>記事一覧</div>
         <div className={styled.list}>
           {contents?.map((c) => (
-            <Link key={c.id} passHref href={`/contents/${c.id}`}>
-              <a className={classNames(styled.item, c.visible === false && styled.hidden)}>
-                <div className={styled.image}>
-                  <div>📖</div>
-                </div>
+            <Link
+              key={c.id}
+              passHref
+              href={`/contents/${c.id}`}
+              className={classNames(styled.item, c.visible === false && styled.hidden)}
+            >
+              <div className={styled.image}>
+                <div>📖</div>
+              </div>
+              <div>
+                <div className={styled.title}>{c.title}</div>
                 <div>
-                  <div className={styled.title}>{c.title}</div>
-                  <div>
-                    {c.updatedAt?.toLocaleString('ja-JP', {
-                      year: 'numeric',
-                      month: '2-digit',
-                      day: '2-digit',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </div>
+                  {c.updatedAt?.toLocaleString('ja-JP', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
                 </div>
-              </a>
+              </div>
             </Link>
           ))}
           {contents && contents.length % 2 ? (

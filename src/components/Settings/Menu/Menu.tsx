@@ -13,12 +13,8 @@ export const Menu: FC<Props> = ({}) => {
   return (
     <BaseFrame title="Setting Menu">
       <div className={styled.root}>
-        <Link href="/settings/basic">
-          <a>Basic</a>
-        </Link>
-        <Link href="/settings/files">
-          <a>Import/Export</a>
-        </Link>
+        <Link href="/settings/basic">Basic</Link>
+        <Link href="/settings/files">Import/Export</Link>
       </div>
     </BaseFrame>
   );

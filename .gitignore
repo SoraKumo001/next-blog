@@ -1,6 +1,6 @@
 node_modules
 .next
-.storybook
+.swc
 .vscode
 out
 .env*

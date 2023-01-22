@@ -1,10 +1,12 @@
 node_modules
 .next
+.swc
 .storybook
 .vscode
 out
+bin
 .log
 storybook-static
 .env-deploy
 .env.local
-
+tsconfig.tsbuildinfo

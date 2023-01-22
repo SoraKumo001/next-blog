@@ -24,10 +24,10 @@ import {
   where,
 } from '@firebase/firestore';
 
-export const FirestoraDoc =
+export const FirestoreDoc =
   (collection: string) =>
   <T extends { new (...args: any[]): {} }>(constructor: T) => {
-    Object.defineProperty(constructor.prototype, DocmentSymbol, {
+    Object.defineProperty(constructor.prototype, DocumentSymbol, {
       enumerable: true,
       value: true,
     });
@@ -46,11 +46,11 @@ export const FirestoraDoc =
   };
 
 export const FirestoreProperty =
-  (type?: FirestorTypes): PropertyDecorator =>
+  (type?: FirestoreTypes): PropertyDecorator =>
   (target, propertyKey) => {
     const designType = (
       Reflect.getMetadata('design:type', target, propertyKey) as { name?: string }
-    )?.name?.toLowerCase() as FirestorTypes | undefined;
+    )?.name?.toLowerCase() as FirestoreTypes | undefined;
     const types = (target as FirestoreDecoratorType).__types || {};
     types[String(propertyKey)] = type || designType || 'unknown';
     Object.defineProperty(target, '__types', {
@@ -107,8 +107,8 @@ export const deleteDoc = async <T extends Object & { [key in keyof T]: T[key] }>
   }
   return false;
 };
-const DocmentSymbol = Symbol('FirestoraDoc');
-export type FirestorTypes =
+const DocumentSymbol = Symbol('FirestoreDoc');
+export type FirestoreTypes =
   | 'id'
   | 'string'
   | 'number'
@@ -123,25 +123,25 @@ export type FirestorTypes =
   | 'unknown';
 export type FirestoreDecoratorType = {
   __collection?: string;
-  __types?: { [key: string]: FirestorTypes };
-  [DocmentSymbol]: true;
+  __types?: { [key: string]: FirestoreTypes };
+  [DocumentSymbol]: true;
 };
 
 const Entities: { [key: string]: { new (...args: any[]): {} } } = {};
 export const isFirebaseEntity = (object: Object) => {
   const prototype = Object.getPrototypeOf(object) as FirestoreDecoratorType;
-  return prototype?.[DocmentSymbol];
+  return prototype?.[DocumentSymbol];
 };
 export const getFirestoreEntityTypes = <T extends { new (...args: any[]): {} }>(
   entity: object | T
 ) => {
   let prototype: FirestoreDecoratorType | undefined;
-  if ('prototype' in entity && entity.prototype[DocmentSymbol]) {
+  if ('prototype' in entity && entity.prototype[DocumentSymbol]) {
     prototype = entity.prototype;
   }
   if (!prototype)
     prototype = Object.getPrototypeOf(Object.getPrototypeOf(entity)) as FirestoreDecoratorType;
-  if (prototype[DocmentSymbol]) {
+  if (prototype[DocumentSymbol]) {
     const types = prototype.__types || {};
     const collection = prototype.__collection || '';
     return { types, collection };
@@ -310,8 +310,8 @@ export const getFireDocsWithSnapshot = async <
       });
   }
   const docQuery = query(collection(db, path), ...constrains).withConverter(FirebaseConverter);
-  const shapshot = await getDocs(docQuery);
-  return [shapshot.docs.map((v) => v.data()) as R[], shapshot];
+  const snapshot = await getDocs(docQuery);
+  return [snapshot.docs.map((v) => v.data()) as R[], snapshot];
 };
 export const getFireDocs = async <T extends { new (...args: any[]): {} }>(
   db: Firestore | undefined,
@@ -331,7 +331,7 @@ export const getFireDocs = async <T extends { new (...args: any[]): {} }>(
   return result[0];
 };
 
-export const getFireDocWithShapshot = async <
+export const getFireDocWithSnapshot = async <
   T extends { new (...args: any[]): {} },
   R extends T extends { new (...args: any[]): infer R } ? R : never
 >(
@@ -353,6 +353,6 @@ export const getFireDoc = async <T extends { new (...args: any[]): {} }>(
   id: string
 ) => {
   if (!db) return undefined;
-  const result = await getFireDocWithShapshot(db, entity, id);
+  const result = await getFireDocWithSnapshot(db, entity, id);
   return result?.[0];
 };

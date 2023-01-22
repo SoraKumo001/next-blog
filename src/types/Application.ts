@@ -1,6 +1,6 @@
-import { FirestoraDoc, FirestoreProperty } from '../libs/firebase/libs';
+import { FirestoreDoc, FirestoreProperty } from '../libs/firebase/libs';
 
-@FirestoraDoc('Application')
+@FirestoreDoc('Application')
 export class Application {
   @FirestoreProperty('id')
   id?: string;

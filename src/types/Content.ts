@@ -1,6 +1,6 @@
-import { FirestoraDoc, FirestoreProperty } from '../libs/firebase/libs';
+import { FirestoreDoc, FirestoreProperty } from '../libs/firebase/libs';
 
-@FirestoraDoc('Content')
+@FirestoreDoc('Content')
 export class Content {
   @FirestoreProperty('id')
   id?: string;
@@ -17,7 +17,7 @@ export class Content {
   @FirestoreProperty('updated')
   updatedAt?: Date;
 }
-@FirestoraDoc('ContentBody')
+@FirestoreDoc('ContentBody')
 export class ContentBody {
   @FirestoreProperty('id')
   id?: string;

@@ -3,7 +3,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers';
 import { Provider } from '@react-libraries/use-ssr';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import React from 'react';
-import data from './datas/index.json';
+import data from './data/index.json';
 import '@/styles/app.scss';
 
 const initialData = { loading: 1, login: true };

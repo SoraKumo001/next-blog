@@ -6,3 +6,4 @@ out
 .env*
 .log
 storybook-static
+tsconfig.tsbuildinfo

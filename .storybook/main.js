@@ -9,4 +9,8 @@ module.exports = {
     name: '@storybook/nextjs',
     options: {},
   },
+  babel: async (options) => ({
+    ...options,
+    plugins: [...options.plugins, ['@babel/plugin-proposal-decorators', { legacy: true }]],
+  }),
 };

@@ -4,6 +4,6 @@ node_modules
 .vscode
 out
 .env*
-.log
+*.log
 storybook-static
 tsconfig.tsbuildinfo

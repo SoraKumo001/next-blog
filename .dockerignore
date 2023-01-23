@@ -5,7 +5,7 @@ node_modules
 .vscode
 out
 bin
-.log
+*.log
 storybook-static
 .env-deploy
 .env.local

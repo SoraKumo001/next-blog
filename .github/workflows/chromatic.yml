@@ -1,0 +1,23 @@
+name: 'Chromatic'
+
+on: push
+
+jobs:
+  chromatic-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Cache modules(yarn.lock)
+        id: cache
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.OS }}-build-${{ hashFiles('yarn.lock') }}
+          restore-keys: ${{ runner.OS }}-build-
+      - name: Package install
+        if: steps.cache.outputs.cache-hit != 'true'
+        run: yarn
+      - name: Publish to Chromatic
+        uses: chromaui/action@v3
+        with:
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
